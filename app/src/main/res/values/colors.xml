@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorGray">#CCC</color>
+    <color name="colorRed">#FFFF4444</color>
+    <color name="backgroundcolor">#fcfcfc</color>
+    <color name="lightgray">#ededed</color>
+    <color name="deeppurple">#7c4dff</color>
+    <color name="yello">#ffb300</color>
+    <color name="green">#00bfa5</color>
+    <color name="darkblue">#23283a</color>
+    <color name="testcolorblue">#152b38</color>
+    <color name="pink">#fe104d</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="background">#fcfcfc</color>
+
+
+    <color name="background_color_blue">#00a9f4</color>
+    <color name="background_color_grey">#222233</color>
+    <color name="text_color">#fefefe</color>
+
+    <color name="overlayBackground">#7f333639</color>
+    <color name="overlayActionBar">#0e0d0e</color>
+    <color name="overGrey">#d6d5d7</color>
+    <!--Button Color-->
+    <color name="btnLogin">#e53835</color>
+    <color name="colorFacebook">#4a6ea9</color>
+    <color name="colorGoogle">#da4835</color>
+    <!--Rating Dialog color-->
+    <color name="starColor">#e53835</color>
+    <color name="noteDescriptionTextColor">#e53835</color>
+    <color name="titleTextColor">#000000</color>
+    <color name="descriptionTextColor">#222233</color>
+    <color name="commentTextColor">#000000</color>
+    <color name="hintTextColor">#55000000</color>
+</resources>

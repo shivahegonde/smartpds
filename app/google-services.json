@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "574330036845",
+    "firebase_url": "https://smartpsd-7229a.firebaseio.com",
+    "project_id": "smartpsd-7229a",
+    "storage_bucket": "smartpsd-7229a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574330036845:android:d0921b29812ee1cef05564",
+        "android_client_info": {
+          "package_name": "com.example.smartpds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574330036845-kp98qqi1mnreohatesfv7r3n5o63n75i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartpds",
+            "certificate_hash": "ae7422be0a8f2e0f7cd53bf820803a1fd2d47995"
+          }
+        },
+        {
+          "client_id": "574330036845-tilnt2jjk9o403v38f7b5boeen276251.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0EBDfvqEKVBnQTBUQyVeLWUp4OAbDDOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574330036845-tilnt2jjk9o403v38f7b5boeen276251.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
