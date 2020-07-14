@@ -33,8 +33,11 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
@@ -44,18 +47,24 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
 
     SliderLayout sliderLayout;
     HashMap<String,String> Hash_file_maps ;
-    CardView walletCard,shopCard;
+    CardView walletCard,shopCard,allShops;
+    String mobile;
     private NotificationManagerCompat notificationManager;
-    private EditText editTextTitle;
-    private EditText editTextMessage;
+
+
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseKyc;
+    private NavigationView mNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
+
         notificationManager = NotificationManagerCompat.from(this);
-        editTextTitle = findViewById(R.id.edit_text_title);
-        editTextMessage = findViewById(R.id.edit_text_message);
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        mobile=getIntent().getStringExtra("mobile");
+        final DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Customers").child("9405462511");
+//        mDatabaseKyc = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
         ImageView menuIcon = (ImageView) findViewById(R.id.menu_icon);
         ImageView extraMenuIcon = (ImageView) findViewById(R.id.extra_menu_icon);
         menuIcon.setOnClickListener(new View.OnClickListener(){
@@ -116,57 +125,37 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
 
 
         walletCard=findViewById(R.id.bankCard);
+        allShops=findViewById(R.id.allshops);
         shopCard =findViewById(R.id.shop_card);
 walletCard.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        NotificationChannel channel1 = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel1 = new NotificationChannel(
-                    CHANNEL_1_ID,
-                    "Channel 1",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel1.setDescription("This is Channel 1");
-        }
-        NotificationManager manager = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            manager = getSystemService(NotificationManager.class);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            manager.createNotificationChannel(channel1);
-        }
-
-
 
     }
 });
-
+allShops.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Toast.makeText(DashBoard.this, "All Shops", Toast.LENGTH_SHORT).show();
+    }
+});
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DashBoard.this, "Buy Clicked", Toast.LENGTH_LONG).show();
+            }
+        });
         shopCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(DashBoard.this,DistributorQRScanner.class);
+                intent.putExtra("customermobile","9405462511");
                 startActivity(intent);
             }
         });
     }
 
-    public void sendOnChannel1(View v) {
-        String title = editTextTitle.getText().toString();
-        String message = editTextMessage.getText().toString();
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.digiration)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
 
 
     @Override
@@ -201,7 +190,7 @@ walletCard.setOnClickListener(new View.OnClickListener() {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -221,7 +210,7 @@ walletCard.setOnClickListener(new View.OnClickListener() {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action b ar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
@@ -275,7 +264,7 @@ walletCard.setOnClickListener(new View.OnClickListener() {
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

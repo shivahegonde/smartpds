@@ -79,7 +79,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            Intent intent = new Intent(VerifyPhoneActivity.this, DashBoard.class);
+                            Intent intent = new Intent(VerifyPhoneActivity.this, CustomerRegister.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.putExtra("phonenumber", phonenumber);
                             startActivity(intent);

@@ -1,42 +1,71 @@
 {
   "project_info": {
-    "project_number": "574330036845",
-    "firebase_url": "https://smartpsd-7229a.firebaseio.com",
-    "project_id": "smartpsd-7229a",
-    "storage_bucket": "smartpsd-7229a.appspot.com"
+    "project_number": "499170055808",
+    "firebase_url": "https://crudoperationapp-3b7b0.firebaseio.com",
+    "project_id": "crudoperationapp-3b7b0",
+    "storage_bucket": "crudoperationapp-3b7b0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:574330036845:android:d0921b29812ee1cef05564",
+        "mobilesdk_app_id": "1:499170055808:android:9ff60a62af6599ce5eb865",
         "android_client_info": {
-          "package_name": "com.example.smartpds"
+          "package_name": "com.acmuom.covid19"
         }
       },
       "oauth_client": [
         {
-          "client_id": "574330036845-kp98qqi1mnreohatesfv7r3n5o63n75i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.smartpds",
-            "certificate_hash": "ae7422be0a8f2e0f7cd53bf820803a1fd2d47995"
-          }
-        },
-        {
-          "client_id": "574330036845-tilnt2jjk9o403v38f7b5boeen276251.apps.googleusercontent.com",
+          "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD0EBDfvqEKVBnQTBUQyVeLWUp4OAbDDOo"
+          "current_key": "AIzaSyBM6dadFSVpPgd6mZwjb7V4TcW4wnlfvtI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "574330036845-tilnt2jjk9o403v38f7b5boeen276251.apps.googleusercontent.com",
+              "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499170055808:android:bb7fd207b7aac2e65eb865",
+        "android_client_info": {
+          "package_name": "com.example.smartpds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499170055808-rlor7h3gsfcbb4t56ob5p1celnraqlne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartpds",
+            "certificate_hash": "d9b6f3bf0fe6e7e73a703c58c1ae950bafba694f"
+          }
+        },
+        {
+          "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM6dadFSVpPgd6mZwjb7V4TcW4wnlfvtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

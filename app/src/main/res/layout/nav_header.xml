@@ -14,6 +14,7 @@
         android:src="@drawable/digiration" />
 
     <TextView
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
@@ -21,6 +22,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/usermail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="support@digiration.gov.in" />

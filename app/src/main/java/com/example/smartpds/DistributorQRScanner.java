@@ -10,6 +10,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.example.smartpds.shop.DistributerShop;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -19,9 +23,9 @@ import org.json.JSONObject;
 public class DistributorQRScanner extends AppCompatActivity implements View.OnClickListener {
 
 
-    private Button buttonScan;
+    private Button buttonScan,showProducts;
     private TextView textViewName, textViewAddress;
-
+String customerMobile;
     //qr code scanner object
     private IntentIntegrator qrScan;
     @Override
@@ -29,6 +33,7 @@ public class DistributorQRScanner extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.distributorqrscanner);
         buttonScan = (Button) findViewById(R.id.buttonScan);
+        customerMobile=getIntent().getStringExtra("customermobile");
         textViewName = (TextView) findViewById(R.id.textViewName);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
         qrScan = new IntentIntegrator(this);
@@ -47,13 +52,18 @@ public class DistributorQRScanner extends AppCompatActivity implements View.OnCl
             } else {
                 //if qr contains data
                 try {
+                    FirebaseApp.initializeApp(this);
+                    FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
                     //converting the data to json
-                    JSONObject obj = new JSONObject(result.getContents());
+//                    JSONObject obj = new JSONObject(result.getContents());
                     //setting values to textviews
                     textViewName.setVisibility(View.VISIBLE);
-                    textViewName.setText(obj.getString("name")+" Ration Shop");
-                    textViewAddress.setText(obj.getString("address"));
-                } catch (JSONException e) {
+//                    textViewName.setText(obj.getString("name")+" Ration Shop");
+//                    textViewAddress.setText(obj.getString("address"));
+                    String mobile=result.getContents();
+                    openShop(mobile);
+                    Query DistributerList =firebaseDatabase.getReference("DistributorsProducts").child(mobile);
+                } catch (Exception e) {
                     e.printStackTrace();
                     //if control comes here
                     //that means the encoded format not matches
@@ -66,6 +76,16 @@ public class DistributorQRScanner extends AppCompatActivity implements View.OnCl
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private void openShop(String mobile) {
+        Toast.makeText(this, "Try block "+ mobile, Toast.LENGTH_LONG).show();
+        textViewAddress.setText(mobile);
+        Intent distributerShop=new Intent(DistributorQRScanner.this, DistributerShop.class);
+        distributerShop.putExtra("mobileno" ,mobile );
+        distributerShop.putExtra("customermobile" ,customerMobile );
+        startActivity(distributerShop);
+    }
+
     @Override
     public void onClick(View view) {
         //initiating the qr code scan
