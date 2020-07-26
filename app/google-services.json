@@ -71,6 +71,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499170055808:android:07cac8c787f5f4285eb865",
+        "android_client_info": {
+          "package_name": "com.silentquot.sihadminmodule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM6dadFSVpPgd6mZwjb7V4TcW4wnlfvtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499170055808-vv7mlfrsmssq0kpuouqp99oaon4elmgq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

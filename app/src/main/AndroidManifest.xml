@@ -32,14 +32,23 @@
         <activity android:name=".ShowQuotaDistributor"></activity>
         <activity android:name=".DistributorRegister"></activity>
         <activity android:name=".DistributorKycRegister"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".CustomerKycRegister"></activity>
+        <activity android:name=".UserLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity">
+
+        </activity>
         <activity android:name=".recyclerex.demo.StudentActivity"></activity>
+        <activity android:name=".orderview.DisplayOrdersActivity"></activity>
+        <activity android:name=".benificiary.AddBenificiaryActivity"></activity>
+        <activity android:name=".benificiary.ViewBenificiaryActivity"></activity>
+        <activity android:name=".BeneficiaryActivity"></activity>
         <activity android:name=".recyclerex.product.ProductActivity"></activity>
         <activity android:name=".recyclerex.demo.ShowStudentDetailsActivity"></activity>
         <activity android:name=".recyclerex.product.ShowProductDetailsActivity"></activity>
@@ -47,12 +56,13 @@
         <activity android:name=".shop.DistributerShop" />
         <activity android:name=".shop.CartActivity" />
         <activity android:name=".DashBoard" />
-        <activity android:name=".WalletTransactions" />
+        <activity android:name=".DistributorWalletTransaction" />
         <activity android:name=".DistributorDashBoard" />
         <activity android:name=".QRGeneration" />
         <activity android:name=".Logout" />
         <activity android:name=".DistributorQRScanner" />
         <activity android:name=".VerifyPhoneActivity" />
+        <activity android:name=".VerifyPhoneActivityForOrder" />
     </application>
 
 </manifest>

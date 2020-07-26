@@ -11,12 +11,12 @@
 
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:id="@+id/user_nav_view"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu" />
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        app:headerLayout="@layout/customer_header"
+        app:menu="@menu/main_menu" />
 
 
 
@@ -122,7 +122,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/allshops"
+                android:id="@+id/allorders"
                 android:layout_width="@dimen/card_width"
                 android:layout_height="@dimen/card_height"
                 android:layout_margin="@dimen/medium_margin"
@@ -146,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/medium_margin"
-                        android:text="Shops"
+                        android:text="Orders"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -161,7 +161,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/addCard"
+                android:id="@+id/manage_beneficiary"
                 android:layout_width="@dimen/card_width"
                 android:layout_height="@dimen/card_height"
                 android:layout_margin="@dimen/medium_margin"
@@ -179,13 +179,13 @@
                         android:layout_height="@dimen/image_size"
                         android:background="#FFFFFF"
                         android:padding="@dimen/medium_margin"
-                        android:src="@drawable/schemes" />
+                        android:src="@drawable/beneficiaries" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/medium_margin"
-                        android:text="Govt Schemes"
+                        android:text="Your Beneficiary"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

@@ -35,4 +35,9 @@
 
     <string name="navigation_drawer_open">OPEN</string>
     <string name="navigation_drawer_close">CLOSE</string>
+
+
+    <string name="my_cart">My Cart</string>
+    <string name="delete">DELETE</string>
+
 </resources>

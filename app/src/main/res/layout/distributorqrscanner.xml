@@ -16,27 +16,6 @@
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="Name" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="Address" />
-
-        <TextView
-            android:id="@+id/textViewAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="xyz"
-            android:visibility="invisible"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-
-
     </LinearLayout>
 
     <Button
@@ -54,7 +33,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/green"
-        android:text="xyz"
+        android:text="Scanned Successfully"
         android:gravity="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:visibility="invisible" />

@@ -35,7 +35,6 @@ String customerMobile;
         buttonScan = (Button) findViewById(R.id.buttonScan);
         customerMobile=getIntent().getStringExtra("customermobile");
         textViewName = (TextView) findViewById(R.id.textViewName);
-        textViewAddress = (TextView) findViewById(R.id.textViewAddress);
         qrScan = new IntentIntegrator(this);
         buttonScan.setOnClickListener(this);
 
@@ -79,7 +78,7 @@ String customerMobile;
 
     private void openShop(String mobile) {
         Toast.makeText(this, "Try block "+ mobile, Toast.LENGTH_LONG).show();
-        textViewAddress.setText(mobile);
+
         Intent distributerShop=new Intent(DistributorQRScanner.this, DistributerShop.class);
         distributerShop.putExtra("mobileno" ,mobile );
         distributerShop.putExtra("customermobile" ,customerMobile );

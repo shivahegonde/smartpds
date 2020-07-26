@@ -37,11 +37,9 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
     private FirebaseDatabase db;
 
 
-    public ProductItemAdapter(@NonNull FirebaseRecyclerOptions<Product> options, Context context, String customerMobile,String mobile) {
-
+    public ProductItemAdapter(@NonNull FirebaseRecyclerOptions<Product> options , String userId) {
         super(options);
-        this.contextView=context;
-        this.mobile=customerMobile;
+        this.mobile=userId;
     }
 
     public  interface OnItemClickListener{
@@ -107,58 +105,54 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
     protected void onBindViewHolder(@NonNull final ProductViewHolder holder, int position, @NonNull final Product model) {
 
 
-        final String productId=getSnapshots().getSnapshot(position).getKey().toString();
-        Log.d("OnBind" , productId);
-//        holder.mimageView.setImageResource(model.getProductImage());
-        Picasso.with(contextView).load(model.getProductImage()).into( holder.mimageView);
-        holder.mtextView1.setText(productId);
-        holder.mtextView2.setText(model.getPrice());
+        final String productId = getSnapshots().getSnapshot(position).getKey().toString();
 
-        db = FirebaseDatabase.getInstance();
-        documentReference = db.getReference("DistributorProducts" ).child(mobile).child(productId);
-        // put FirebaseAuth.getInstance().getCurrentUser().getUid();  instead of uniqueUerId
-        documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                {
-                    String quantity = dataSnapshot.child("quanity").getValue(String.class);
-                    String productImage=dataSnapshot.child("productimage").getValue(String.class);
-                    model.setCartUserQuntity(quantity);
-                    ImageView myImage = (ImageView) holder.mimageView;
-                    Picasso.with(contextView).load(productImage).into(myImage);
-//                    holder.mimageView.setImageDrawable();
+        if (!productId.equals("status")) {
+            Log.d("OnBind", productId);
+            //holder.mimageView.setImageResource(currentItem.getmImageResource());
+            holder.mtextView1.setText(productId);
+            holder.mtextView2.setText(model.getPrice());
 
-                    holder.quntity.setText(quantity);
-                    int price = Integer.parseInt(model.getPrice()) *  Integer.parseInt(quantity);
-                    String newPrice = String.valueOf(price);
-                    model.setCartPriceQuantity(newPrice);
-                }else {
-                    model.setCartUserQuntity("0");
-                    model.setCartPriceQuantity("0");
+            db = FirebaseDatabase.getInstance();
+            documentReference = db.getReference("Cart/" + mobile).child(productId);
+            // put FirebaseAuth.getInstance().getCurrentUser().getUid();  instead of uniqueUerId
+            documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String quantity = dataSnapshot.child("quanity").getValue(String.class);
+                        model.setCartUserQuntity(quantity);
+                        holder.quntity.setText(quantity);
+                        int price = Integer.parseInt(model.getPrice()) * Integer.parseInt(quantity);
+                        String newPrice = String.valueOf(price);
+                        model.setCartPriceQuantity(newPrice);
+                    } else {
+                        model.setCartUserQuntity("0");
+                        model.setCartPriceQuantity("0");
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
-        holder.quantiy_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mlistener.addQuantityClick(model , productId ,holder.quntity);
-            }
-        });
+            holder.quantiy_add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mlistener.addQuantityClick(model, productId, holder.quntity);
+                }
+            });
 
-        holder.quantity_remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mlistener.removeQuantityClick(model , productId , holder.quntity);
-            }
-        });
+            holder.quantity_remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mlistener.removeQuantityClick(model, productId, holder.quntity);
+                }
+            });
 
+        }
     }
 
     public  void refreshQuantity(String Quantity , int position)

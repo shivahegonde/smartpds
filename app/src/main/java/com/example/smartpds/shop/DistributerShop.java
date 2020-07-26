@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.ProductItemAdapter;
+import com.example.smartpds.model.Cart;
 import com.example.smartpds.model.Distributer;
 import com.example.smartpds.model.Product;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -28,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.Map;
 
 
 public class DistributerShop extends AppCompatActivity {
@@ -47,7 +50,7 @@ public class DistributerShop extends AppCompatActivity {
     String strshopLocation;
     String strshopPinCode;
     String strshopContact;
-    String customerMobile;
+    String customerMobile,distributorMobile;
     ProductItemAdapter productItemAdapter;
     RatingBar distributorRatingBar ;
     Button submitDistributorRating;
@@ -75,6 +78,7 @@ public class DistributerShop extends AppCompatActivity {
 
         documentReference = db.getReference("Distributors/" + ShopId);
         ratingReference = db.getReference("DistributorRatings/" + ShopId);
+//        ratingReference = db.getReference("DistributorRatings/" + "0000077667");
 
         documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -107,11 +111,27 @@ public class DistributerShop extends AppCompatActivity {
         ratingReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float total=0,count=0,average;
                 if (dataSnapshot.exists()) {
+                    Map<String, String> value = (Map<String, String>)dataSnapshot.getValue();
+                    for (Map.Entry<String, String> entry : value.entrySet()) {
+                        count++;
+                        total=total+Float.parseFloat(""+entry.getValue());
+
+//                       Toast.makeText(DistributerShop.this, "Average Rating== "+(count-1)+" Total "+total, Toast.LENGTH_SHORT).show();
+                    }
+                    count--;
+                    average=total/count;
+                    Toast.makeText(DistributerShop.this, "Average Rating== "+(count)+"Total " +total+" Average  "+average, Toast.LENGTH_SHORT).show();
+//                    float rating = Float.parseFloat(dataSnapshot.child(dataSnapshot.getKey()).getValue(String.class));
+//                    total = total + rating;
+//                    count = count + 1;
+//                    average = total / count;
+//                    Toast.makeText(DistributerShop.this, "Average Rating== "+average, Toast.LENGTH_SHORT).show();
                     //                    Picasso.with(DistributerShop.this).load(shop.getShopImage()).into(shopImage);
                     try {
                         if (dataSnapshot.exists()) {
-                            distributorRatingBar.setRating(Float.parseFloat(dataSnapshot.child("9405462511").getValue(String.class)));
+                            distributorRatingBar.setRating(average);
                         }
                         else {
                             Toast.makeText(DistributerShop.this, "Rating not Found Please Rate", Toast.LENGTH_SHORT).show();
@@ -132,7 +152,7 @@ public class DistributerShop extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String rating = "" +distributorRatingBar.getRating();
-                ratingReference.child("9405462511").setValue(rating);
+                ratingReference.child(customerMobile).child("Rating").setValue(rating);
                 Toast.makeText(DistributerShop.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
             }
         });
@@ -147,13 +167,11 @@ public class DistributerShop extends AppCompatActivity {
         mrecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         FirebaseApp.initializeApp(this);
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-
         Query DistributerList =firebaseDatabase.getReference("DistributorsProducts").child(ShopId);
-
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(DistributerList, Product.class)
                 .build();
-        productItemAdapter = new ProductItemAdapter(options,this,customerMobile,ShopId);
+        productItemAdapter = new ProductItemAdapter(options,customerMobile);
         mrecyclerView.setAdapter(productItemAdapter);
 
 
@@ -163,13 +181,14 @@ public class DistributerShop extends AppCompatActivity {
         proceedtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DatabaseReference dref=db.getReference("Cart").child(customerMobile).child("rava").child("quantity").setValue(quantity.getText().toString());
-//                DatabaseReference dref2=db.getReference("Cart").child(customerMobile).child("rava").child("price").setValue(price.getText().toString())
-//                db.getReference("Cart").child(getIntent().getStringExtra("customermobile")).child("wheat").child("quantity").setValue("10");
-//                db.getReference("Cart").child(getIntent().getStringExtra("customermobile")).child("wheat").child("price").setValue("5");
+                documentReference = db.getReference("Cart/"+ customerMobile);
+                Cart cart= new Cart(ShopId , true );
+                documentReference.child("status").setValue(cart);
+
                 Intent intent = new Intent(DistributerShop.this, CartActivity.class);
-                        intent.putExtra("mobileno" , ShopId);
-                        intent.putExtra("customermobile" , getIntent().getStringExtra("customermobile"));
+                //        intent.putExtra(TOTAL_PRICE , totalPriceOfCart);
+                intent.putExtra("customerMobile" ,customerMobile );
+                intent.putExtra("distributorMobile",ShopId);
                 startActivity(intent);
             }
 
@@ -178,13 +197,13 @@ public class DistributerShop extends AppCompatActivity {
     }
 
     private void initlistner() {
-        Toast.makeText(this, "Hello Shivkumar mob no "+shopContact.getText().toString().trim(), Toast.LENGTH_SHORT).show();
-        documentReference = db.getReference("Cart").child(shopContact.getText().toString().trim());
+
+        documentReference = db.getReference("Cart/"+ customerMobile);
 
         productItemAdapter.setOnItemClickListener(new ProductItemAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                Toast.makeText(getApplicationContext() , FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext() , FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -195,8 +214,8 @@ public class DistributerShop extends AppCompatActivity {
                 v.setText(newQuantity);
                 int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(product.getPrice());
                 String newPrice = String.valueOf(price);
-                documentReference.child(productName).child("productimage").setValue("https://meetthetaste.files.wordpress.com/2019/02/img-20190205-wa00072035697822075996542.jpg");
-                 documentReference.child(productName).child("quanity").setValue(newQuantity);
+
+                documentReference.child(productName).child("quanity").setValue(newQuantity);
                 documentReference.child(productName).child("price").setValue(newPrice);
 
             }
@@ -221,7 +240,7 @@ public class DistributerShop extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (productItemAdapter!=null)
-        productItemAdapter.startListening();
+            productItemAdapter.startListening();
     }
 
     @Override

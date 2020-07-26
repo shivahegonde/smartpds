@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".shop.DistributerShop">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="95dp"
+
         android:layout_marginTop="0dp"
         android:textAlignment="center">
         <ImageView  android:layout_width="match_parent"
@@ -21,20 +23,11 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="ShopName"
-            android:id="@+id/shopName"
-            android:textSize="20dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="6dp"
-            android:textColor="@color/cardview_light_background"
-            />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+
         android:layout_height="200dp"
         app:cardCornerRadius="30dp"
         android:id="@+id/crd1"

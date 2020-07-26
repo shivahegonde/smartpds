@@ -20,6 +20,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,22 +36,23 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText editText;
     private Button signIn;
-    String phonenumber;
+    String phonenumber,userType,mobileNo;
     FirebaseAuthSettings firebaseAuthSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
-
+userType=getIntent().getStringExtra("usertype");
         mAuth = FirebaseAuth.getInstance();
         signIn = findViewById(R.id.buttonsignin);
         progressBar = findViewById(R.id.progressbar);
         firebaseAuthSettings = mAuth.getFirebaseAuthSettings();
         editText = findViewById(R.id.edittextcode);
-
+        userType=getIntent().getStringExtra("usertype");
+        mobileNo=getIntent().getStringExtra("mobile");
         phonenumber = getIntent().getStringExtra("phonenumber");
-        sendVerificationCode2(phonenumber);
+        sendVerificationCode(phonenumber);
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +84,70 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if (userType.equalsIgnoreCase("distributor")){
+                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Distributors/" + mobileNo);
+                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            Intent intent = new Intent(VerifyPhoneActivity.this, CustomerRegister.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.putExtra("phonenumber", phonenumber);
-                            startActivity(intent);
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            // Exist! Do whatever.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorDashBoard.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+
+                                        } else {
+                                            // Don't exist! Do something.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorRegister.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        // Failed, how to handle?
+
+                                    }
+
+                                });
+
+                            }
+                            else
+                            {
+                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Customers/" + mobileNo);
+                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            // Exist! Do whatever.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, DashBoard.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+
+                                        } else {
+                                            // Don't exist! Do something.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, CustomerRegister.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        // Failed, how to handle?
+
+                                    }
+
+                                });
+
+                            }
+
 
                         } else {
                             Toast.makeText(VerifyPhoneActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -91,53 +156,18 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 });
     }
 
-    private void sendVerificationCode(String number) {
-        firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(number, "123123");
 
-        progressBar.setVisibility(View.VISIBLE);
+
+    private void sendVerificationCode(String number) {
+                progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
-                60L,
+                60,
                 TimeUnit.SECONDS,
                 TaskExecutors.MAIN_THREAD,
                 mCallBack
         );
 
-    }
-
-    private void sendVerificationCode2(String number) {
-        final String code2="123123";
-        firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(number, code2);
-
-        progressBar.setVisibility(View.VISIBLE);
-        PhoneAuthProvider phoneAuthProvider = PhoneAuthProvider.getInstance();
-        phoneAuthProvider.getInstance().verifyPhoneNumber(
-                number,
-                60L,
-                TimeUnit.SECONDS,
-                this,
-                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                    @Override
-                    public void onVerificationCompleted(PhoneAuthCredential credential) {
-                        // Instant verification is applied and a credential is directly returned.
-                        // ...
-//                        verifyCode(code2);
-                        String code = credential.getSmsCode();
-                        if (code != null) {
-                            editText.setText(code);
-                            verifyCode(code);
-                        }
-
-
-                    }
-
-                    // [START_EXCLUDE]
-                    @Override
-                    public void onVerificationFailed(FirebaseException e) {
-
-                    }
-                    // [END_EXCLUDE]
-                });
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks

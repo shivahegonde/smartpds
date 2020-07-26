@@ -1,4 +1,4 @@
-package com.example.smartpds.adapter;
+package com.example.smartpds.shop;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.CartViewHolder> {
 
 
-    private OnItemClickListener mlistener;
+    private CartAdapter.OnItemClickListener mlistener;
 
 
     private RecyclerView.OnItemTouchListener mlistner;
@@ -38,7 +38,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
     }
 
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(CartAdapter.OnItemClickListener listener){
         mlistener=listener;
     }
 
@@ -50,7 +50,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
 
 
 
-        public CartViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public CartViewHolder(@NonNull View itemView, final CartAdapter.OnItemClickListener listener) {
             super(itemView);
             mItemIcon=itemView.findViewById(R.id.cartitemproducticon);
             mItemName=itemView.findViewById(R.id.cartitemproductname);
@@ -62,7 +62,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
                 public void onClick(View view) {
                     if(listener!=null){
                         int position=getAdapterPosition();
-                        if(position!=RecyclerView.NO_POSITION){
+                        if(position!= RecyclerView.NO_POSITION){
                             listener.OnItemClick(position);
 
                         }
@@ -74,9 +74,9 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
 
     @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CartAdapter.CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.cartitem_layout,parent,false);
-        CartViewHolder evh=new CartViewHolder(v,mlistener);
+        CartAdapter.CartViewHolder evh=new CartAdapter.CartViewHolder(v,mlistener);
         return evh;
     }
 
@@ -85,24 +85,18 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
     protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Product model) {
 
         final String productId=getSnapshots().getSnapshot(position).getKey().toString();
-    if (productId.equalsIgnoreCase("rava")){
-        holder.mItemIcon.setImageResource(R.drawable.rava);
-    }
-    else if(productId.equalsIgnoreCase("wheat")){
-        holder.mItemIcon.setImageResource(R.drawable.wheat);
-    }
-    else if (productId.equalsIgnoreCase("peanuts")){
-        holder.mItemIcon.setImageResource(R.drawable.peanuts);
-    }
-    else if (productId.equalsIgnoreCase("rice")){
-        holder.mItemIcon.setImageResource(R.drawable.rice);
-    }
-    else if (productId.equalsIgnoreCase("oil")){
-        holder.mItemIcon.setImageResource(R.drawable.oil);
-    }
-
+        if (productId.equalsIgnoreCase("rava")){
+            holder.mItemIcon.setImageResource(R.drawable.rava);
+        }
+        else if(productId.equalsIgnoreCase("wheat")){
+            holder.mItemIcon.setImageResource(R.drawable.wheat);
+        }
+        else if (productId.equalsIgnoreCase("peanuts")){
+            holder.mItemIcon.setImageResource(R.drawable.peanuts);
+        }
+       // holder.mItemIcon.setImageResource(currentItem.getCartItemImg());
         holder.mItemName.setText(productId);
-        holder.mItemPrice.setText(model.getPrice().toString());
+        holder.mItemPrice.setText(model.getPrice());
         holder.mItemQuantity.setText(model.getQuanity());
     }
 

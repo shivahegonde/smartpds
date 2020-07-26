@@ -1,29 +1,21 @@
 package com.example.smartpds;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -33,57 +25,120 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.example.smartpds.orderview.DisplayOrdersActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
-import static com.example.smartpds.App.CHANNEL_1_ID;
-
 public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener {
-
+    Menu menu;
     SliderLayout sliderLayout;
-    HashMap<String,String> Hash_file_maps ;
-    CardView walletCard,shopCard,allShops;
+    HashMap<String, String> Hash_file_maps;
+    CardView walletCard, shopCard, allOrders, manageBeneficiary;
     String mobile;
+    String email, name, profilePic;
     private NotificationManagerCompat notificationManager;
-
-
+    TextView customerName, customerEmail;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
+    private ImageView customerProfilePic;
+    private Long walletAmount;
+    private static final String CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
+        drawerLayout = (DrawerLayout) findViewById(R.id.user_drawer_layout);
+        navigationView = findViewById(R.id.user_nav_view);
+        navigationView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
+                (
+                        this,
+                        drawerLayout,
+                        R.string.navigation_drawer_open,
+                        R.string.navigation_drawer_close
+                ) {
+        };
+        drawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
 
+
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
+        menu = navigationView.getMenu();
+        menu.findItem(R.id.nav_logout).setVisible(false);
+        menu.findItem(R.id.nav_profile).setVisible(false);
+
+        /////////////////////////////////
+
+        mNavigationView = (NavigationView) findViewById(R.id.user_nav_view);
+        customerName = mNavigationView.getHeaderView(0).findViewById(R.id.customer_name);
+        customerEmail = mNavigationView.getHeaderView(0).findViewById(R.id.customer_email);
+        customerProfilePic = mNavigationView.getHeaderView(0).findViewById(R.id.customer_profile_pic);
         notificationManager = NotificationManagerCompat.from(this);
-        mobile=getIntent().getStringExtra("mobile");
+        mobile = getIntent().getStringExtra("mobile");
         final DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
-        mDatabase = FirebaseDatabase.getInstance().getReference("Customers").child("9405462511");
-//        mDatabaseKyc = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Customers").child(mobile);
+        mDatabaseKyc = FirebaseDatabase.getInstance().getReference("CustomerKYC").child(mobile);
         ImageView menuIcon = (ImageView) findViewById(R.id.menu_icon);
         ImageView extraMenuIcon = (ImageView) findViewById(R.id.extra_menu_icon);
-        menuIcon.setOnClickListener(new View.OnClickListener(){
+        menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawer.openDrawer(Gravity.LEFT);
             }
         });
-        extraMenuIcon.setOnClickListener(new View.OnClickListener(){
+        extraMenuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                        sendOnChannel1(view);
 
             }
         });
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                email = dataSnapshot.child("email").getValue(String.class);
+                name = dataSnapshot.child("fname").getValue(String.class) + " " + dataSnapshot.child("lname").getValue(String.class);
+                walletAmount = dataSnapshot.child("walletAmmount").getValue(long.class);
+
+                customerEmail.setText(email);
+                customerName.setText(name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        mDatabaseKyc.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                profilePic = dataSnapshot.child("profilepic").child("url").getValue(String.class);
+                Picasso.with(DashBoard.this).load(profilePic).into(customerProfilePic);
+//                Toast.makeText(DashBoard.this, "Profile Pic Loaded=== "+profilePic, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
         Hash_file_maps = new HashMap<String, String>();
-        sliderLayout = (SliderLayout)findViewById(R.id.slider);
+        sliderLayout = (SliderLayout) findViewById(R.id.slider);
         Uri path1 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aaa);
         Uri path2 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aab);
         Uri path3 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aac);
@@ -104,7 +159,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         Hash_file_maps.put("Raj", str6);
 
 
-        for(String name : Hash_file_maps.keySet()){
+        for (String name : Hash_file_maps.keySet()) {
 
             TextSliderView textSliderView = new TextSliderView(DashBoard.this);
             textSliderView
@@ -114,7 +169,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
                     .setOnSliderClickListener(this);
             textSliderView.bundle(new Bundle());
             textSliderView.getBundle()
-                    .putString("extra",name);
+                    .putString("extra", name);
             sliderLayout.addSlider(textSliderView);
         }
         sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
@@ -124,21 +179,30 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         sliderLayout.addOnPageChangeListener(this);
 
 
-        walletCard=findViewById(R.id.bankCard);
-        allShops=findViewById(R.id.allshops);
-        shopCard =findViewById(R.id.shop_card);
-walletCard.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
+        walletCard = findViewById(R.id.bankCard);
+        allOrders = findViewById(R.id.allorders);
+        manageBeneficiary = findViewById(R.id.manage_beneficiary);
+        shopCard = findViewById(R.id.shop_card);
+        manageBeneficiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashBoard.this, BeneficiaryActivity.class);
+                intent.putExtra("mobile", mobile);
+                startActivity(intent);
+            }
+        });
 
-    }
-});
-allShops.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        Toast.makeText(DashBoard.this, "All Shops", Toast.LENGTH_SHORT).show();
-    }
-});
+        allOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(DashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
+                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+                showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
+                startActivity(showOrders);
+
+            }
+        });
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,13 +213,12 @@ allShops.setOnClickListener(new View.OnClickListener() {
         shopCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(DashBoard.this,DistributorQRScanner.class);
-                intent.putExtra("customermobile","9405462511");
+                Intent intent = new Intent(DashBoard.this, DistributorQRScanner.class);
+                intent.putExtra("customermobile", mobile);
                 startActivity(intent);
             }
         });
     }
-
 
 
     @Override
@@ -169,11 +232,12 @@ allShops.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onSliderClick(BaseSliderView slider) {
 
-        Toast.makeText(this,slider.getBundle().get("extra") + " "+"   "+Hash_file_maps.get("Shivkumar"),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, slider.getBundle().get("extra") + " " + "   " + Hash_file_maps.get("Shivkumar"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
 
     @Override
     public void onPageSelected(int position) {
@@ -181,7 +245,8 @@ allShops.setOnClickListener(new View.OnClickListener() {
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {}
+    public void onPageScrollStateChanged(int state) {
+    }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -216,7 +281,7 @@ allShops.setOnClickListener(new View.OnClickListener() {
         switch (item.getItemId()) {
             case R.id.logout:
                 // Red item was selected
-                Intent intent=new Intent(DashBoard.this,Logout.class);
+                Intent intent = new Intent(DashBoard.this, Logout.class);
                 break;
             case R.id.exit:
                 // Green item was selected
@@ -224,7 +289,7 @@ allShops.setOnClickListener(new View.OnClickListener() {
             case R.id.nav_profile:
                 Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show();
                 break;
-             case R.id.nav_wallet:
+            case R.id.nav_wallet:
                 Toast.makeText(this, "Wallet Clicked", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -241,6 +306,7 @@ allShops.setOnClickListener(new View.OnClickListener() {
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -259,8 +325,7 @@ allShops.setOnClickListener(new View.OnClickListener() {
             Toast.makeText(this, "AboutUs Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_app_setting) {
 
-        }
-        else if (id == R.id.nav_notification_setting) {
+        } else if (id == R.id.nav_notification_setting) {
 
         }
 
