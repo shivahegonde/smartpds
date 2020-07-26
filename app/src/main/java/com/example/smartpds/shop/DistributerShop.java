@@ -63,7 +63,6 @@ public class DistributerShop extends AppCompatActivity {
         ShopId = intent.getStringExtra("mobileno");
         distributorRatingBar= (RatingBar) findViewById(R.id.shoprating);
         distributerName=findViewById(R.id.Distributername);
-        submitDistributorRating=findViewById(R.id.submit_rating);
         shopLocation=findViewById(R.id.Location);
         shopContact=findViewById(R.id.shopcontact);
         quantity=findViewById(R.id.cartitemQuantity);
@@ -93,9 +92,9 @@ public class DistributerShop extends AppCompatActivity {
                     strshopPinCode= String.valueOf(shop.getPincode());
                     strshopContact= String.valueOf(shop.getMobile());
                     distributerName.setText(strdistributerName);
-                    shopLocation.setText(strshopLocation);
-                    shopContact.setText( strshopContact);
-                    shopPinCode.setText(strshopPinCode);
+                    shopLocation.setText("Location:  "+strshopLocation);
+                    shopContact.setText( "+91 "+strshopContact);
+                    shopPinCode.setText("Pincode: "+strshopPinCode);
                     distributerName.setText(shop.getShopname());
 
                     Picasso.with(DistributerShop.this).load(shop.getShopImage()).into(shopImage);
@@ -148,14 +147,7 @@ public class DistributerShop extends AppCompatActivity {
 
             }
         });
-        submitDistributorRating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String rating = "" +distributorRatingBar.getRating();
-                ratingReference.child(customerMobile).child("Rating").setValue(rating);
-                Toast.makeText(DistributerShop.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 //        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
 //        Query DistributerList =firebaseDatabase.getReference("DistributorsProducts").child(getInte);
 //        FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()

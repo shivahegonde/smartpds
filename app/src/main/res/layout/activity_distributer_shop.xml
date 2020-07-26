@@ -9,14 +9,12 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="95dp"
-
+        android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:textAlignment="center">
-        <ImageView  android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"/>
+
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/shop_image"
             android:src="@drawable/ic_launcher_foreground"
             android:layout_width="wrap_content"
@@ -27,16 +25,12 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         app:cardCornerRadius="30dp"
         android:id="@+id/crd1"
 
-        android:layout_marginTop="65dp">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"/>
+        android:layout_marginTop="95dp">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,6 +40,7 @@
             android:layout_gravity="center"
             android:textAlignment="center">
             <TextView
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Distributername"
@@ -54,6 +49,10 @@
                 >
 
             </TextView>
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,34 +62,47 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
                 android:id="@+id/Pincode"
                 android:text="Pincode">
             </TextView>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distributor Contact: "/>
+            <TextView
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/shopcontact"
                 android:text="Contact">
             </TextView>
-
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="15sp"
+                android:layout_marginTop="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customer Ratings: "/>
             <RatingBar
+                android:layout_marginLeft="15dp"
+                style = "?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/shoprating"
-                android:layout_below="@+id/shopContact">
+                >
             </RatingBar>
-            <Button
-                android:id="@+id/submit_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="#f00"
-                android:layout_gravity="center"
-                android:padding="10dp"
-                android:text="Submit Rating"
-                android:textColor="#fff"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+        </LinearLayout>
 
 
         </LinearLayout>

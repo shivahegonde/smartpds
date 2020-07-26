@@ -1,17 +1,22 @@
 package com.example.smartpds;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartpds.shop.DistributerShop;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -27,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivityForOrder extends AppCompatActivity {
@@ -38,9 +44,14 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     private EditText editText;
     private Button signIn;
     TextView otpText;
-    String phonenumber,userType,mobileNo,key;
+    String phonenumber, userType, mobileNo, key;
     int totalAmount;
-    int newPrice=0;
+    int newPrice = 0;
+    RatingBar shopRating;
+    EditText review;
+    DatabaseReference ratingReference,reviewReference;
+    FirebaseDatabase db;
+
     FirebaseAuthSettings firebaseAuthSettings;
     private String distributorMobileNo;
 
@@ -48,22 +59,26 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
-userType=getIntent().getStringExtra("usertype");
-key=getIntent().getStringExtra("key");
+        userType = getIntent().getStringExtra("usertype");
+        key = getIntent().getStringExtra("key");
         mAuth = FirebaseAuth.getInstance();
         signIn = findViewById(R.id.buttonsignin);
+
         progressBar = findViewById(R.id.progressbar);
+        db = FirebaseDatabase.getInstance();
+
         firebaseAuthSettings = mAuth.getFirebaseAuthSettings();
         editText = findViewById(R.id.edittextcode);
         otpText = findViewById(R.id.textview);
         otpText.setText("Enter OTP for your Order");
-        userType=getIntent().getStringExtra("usertype");
-        mobileNo=getIntent().getStringExtra("phonenumber");
-        distributorMobileNo=getIntent().getStringExtra("distributormobile");
-        totalAmount=Integer.parseInt(getIntent().getStringExtra("totalamount"));
+        userType = getIntent().getStringExtra("usertype");
+        mobileNo = getIntent().getStringExtra("phonenumber");
+        distributorMobileNo = getIntent().getStringExtra("distributormobile");
+        totalAmount = Integer.parseInt(getIntent().getStringExtra("totalamount"));
         phonenumber = getIntent().getStringExtra("phonenumber");
 //        sendVerificationCode("+91"+phonenumber);
-
+        ratingReference = db.getReference("DistributorRatings/" + distributorMobileNo);
+        reviewReference = db.getReference("DistributorReviews/" + distributorMobileNo);
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +95,10 @@ key=getIntent().getStringExtra("key");
                 }
 //                verifyCode(code);
                 placeOrder(code);
-                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("mobile", phonenumber);
-                startActivity(intent);
+//                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intent.putExtra("mobile", phonenumber);
+//                startActivity(intent);
 
             }
         });
@@ -93,12 +108,13 @@ key=getIntent().getStringExtra("key");
     private void placeOrder(String code) {
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo);
+        final DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart/" + mobileNo);
         final DatabaseReference customerWallet = FirebaseDatabase.getInstance().getReference("Customers/" + mobileNo).child("walletAmmount");
         final DatabaseReference distributorWallet = FirebaseDatabase.getInstance().getReference("Distributors/" + distributorMobileNo).child("walletAmmount");
 
         // Exist! Do whatever.
-        rootRef.child(key).child("orderPlaced").setValue("yes");
-        Toast.makeText(VerifyPhoneActivityForOrder.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
+//        rootRef.child(key).child("orderPlaced").setValue("yes");
+//        Toast.makeText(VerifyPhoneActivityForOrder.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
 
 
         customerWallet.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -107,14 +123,56 @@ key=getIntent().getStringExtra("key");
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     // Exist! Do whatever.
-                    int amount=snapshot.getValue(Integer.class);
-                    newPrice=amount-totalAmount;
+                    int amount = snapshot.getValue(Integer.class);
 
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Customer Wallet Updated Successfully", Toast.LENGTH_SHORT).show();
+                    newPrice = amount - totalAmount;
 
+                    if(amount<totalAmount){
+                        try {
+                            showErrorDialog(VerifyPhoneActivityForOrder.this, "Transaction Error");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(VerifyPhoneActivityForOrder.this, "You Have insufficient Wallet Balance", Toast.LENGTH_SHORT).show();
+//                        Intent intent=new Intent(getApplicationContext(),DashBoard.class);
+//                        intent.putExtra("mobile",mobileNo);
+//                        startActivity(intent);
+                    }
+                    else {
+                        distributorWallet.addListenerForSingleValueEvent(new ValueEventListener() {
 
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    // Exist! Do whatever.
+                                    int amount = snapshot.getValue(int.class);
+                                    newPrice = amount + totalAmount;
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Distributor Wallet Updated Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                distributorWallet.setValue(newPrice);
+                                rootRef.child(key).child("orderPlaced").setValue("yes");
+                                cartRef.removeValue();
+
+                                try {
+                                    showRatingDialog(VerifyPhoneActivityForOrder.this,"Rate This Distributor");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                // Failed, how to handle?
+
+                            }
+                        });
+                        Toast.makeText(VerifyPhoneActivityForOrder.this, "Transaction done", Toast.LENGTH_SHORT).show();
+                        customerWallet.setValue(newPrice);
+
+                    }
                 }
-                customerWallet.setValue(newPrice);
+
             }
 
 
@@ -125,26 +183,7 @@ key=getIntent().getStringExtra("key");
             }
         });
 
-        distributorWallet.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // Exist! Do whatever.
-                    int amount=snapshot.getValue(int.class);
-                    newPrice=amount+totalAmount;
-
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Distributor Wallet Updated Successfully", Toast.LENGTH_SHORT).show();
-                }
-                distributorWallet.setValue(newPrice);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed, how to handle?
-
-            }
-        });
 
     }
 
@@ -159,33 +198,31 @@ key=getIntent().getStringExtra("key");
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
+                        if (!task.isSuccessful()) {//for otp enable this
 
-                                final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo);
-                                final DatabaseReference customerWallet = FirebaseDatabase.getInstance().getReference("Customers/" + mobileNo).child("walletAmmount");
-                                final DatabaseReference distributorWallet = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo).child("walletAmmount");
-                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo);
+                            final DatabaseReference customerWallet = FirebaseDatabase.getInstance().getReference("Customers/" + mobileNo).child("walletAmmount");
+                            final DatabaseReference distributorWallet = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo).child("walletAmmount");
+                            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            // Exist! Do whatever.
-                                            rootRef.child("order1").child("orderPlaced").setValue("yes");
-                                            Toast.makeText(VerifyPhoneActivityForOrder.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            intent.putExtra("mobile", mobileNo);
-                                            startActivity(intent);
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError error) {
-                                        // Failed, how to handle?
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        // Exist! Do whatever.
+                                       Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.putExtra("mobile", mobileNo);
+                                        startActivity(intent);
 
                                     }
-                                });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError error) {
+                                    // Failed, how to handle?
+
+                                }
+                            });
 
                             customerWallet.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -193,15 +230,29 @@ key=getIntent().getStringExtra("key");
                                 public void onDataChange(DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         // Exist! Do whatever.
-                                        int amount=snapshot.getValue(int.class);
-                                        int newPrice=amount-totalAmount;
-                                        customerWallet.setValue(newPrice);
+                                        int amount = snapshot.getValue(int.class);
+
+
+                                        if(amount<totalAmount){
+                                            //DialogBox
+
+                                            rootRef.child(key).child("orderPlaced").setValue("no");
+                                            Toast.makeText(VerifyPhoneActivityForOrder.this, "Order cannot be placed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(VerifyPhoneActivityForOrder.this, "You Have insufficient Wallet Balance", Toast.LENGTH_SHORT).show();
+                                            Intent intent=new Intent(getApplicationContext(),DashBoard.class);
+                                            intent.putExtra("mobile",mobileNo);
+                                            startActivity(intent);
+                                        }
+                                        else{
+                                            rootRef.child(key).child("orderPlaced").setValue("yes");
+                                            int newPrice = amount - totalAmount;
+                                            customerWallet.setValue(newPrice);
                                         Toast.makeText(VerifyPhoneActivityForOrder.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         intent.putExtra("mobile", mobileNo);
                                         startActivity(intent);
-
+                                        }
                                     }
                                 }
 
@@ -218,8 +269,8 @@ key=getIntent().getStringExtra("key");
                                 public void onDataChange(DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         // Exist! Do whatever.
-                                        int amount=snapshot.getValue(int.class);
-                                        int newPrice=amount+totalAmount;
+                                        int amount = snapshot.getValue(int.class);
+                                        int newPrice = amount + totalAmount;
                                         distributorWallet.setValue(newPrice);
                                         Toast.makeText(VerifyPhoneActivityForOrder.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
@@ -237,16 +288,16 @@ key=getIntent().getStringExtra("key");
                                 }
                             });
 
-                            }
+                        }
                     }
                 });
+
 
     }
 
 
-
     private void sendVerificationCode(String number) {
-                progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
                 60,
@@ -271,7 +322,7 @@ key=getIntent().getStringExtra("key");
             String code = phoneAuthCredential.getSmsCode();
             if (code != null) {
                 editText.setText(code);
-                verifyCode(code);
+//                verifyCode(code);
             }
         }
 
@@ -280,4 +331,87 @@ key=getIntent().getStringExtra("key");
             Toast.makeText(VerifyPhoneActivityForOrder.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
+
+
+    public void showErrorDialog(Activity activity, String msg) throws IOException {
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.insufficientwallet);
+//        myImage.setImageBitmap(mIcon_val);
+//            myImage.setImageBitmap(myBitmap);
+
+
+            TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+            text.setTextSize(25);
+            text.setText("Insufficient Wallet Amount");
+
+        Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
+        Button dialogButton2 = (Button) dialog.findViewById(R.id.btn2);
+        dialogButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialogButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("mobile", mobileNo);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
+
+    }
+
+    public void showRatingDialog(Activity activity, String msg) throws IOException {
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.ratingdialog);
+//        myImage.setImageBitmap(mIcon_val);
+//            myImage.setImageBitmap(myBitmap);
+        RatingBar shopRating= (RatingBar) dialog.findViewById(R.id.rating);
+        EditText review=(EditText) dialog.findViewById(R.id.reviewtext);
+
+        shopRating.setVisibility(View.VISIBLE);
+        Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
+        Button dialogButton2 = (Button) dialog.findViewById(R.id.btn2);
+        dialogButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialogButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String rating = "" +shopRating.getRating();
+                String reviewText=review.getText().toString();
+
+                if (reviewText!="" && reviewText.length()!=2){
+                    reviewReference.child(mobileNo).setValue(reviewText);
+                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
+                }
+                if (rating.length()!=0) {
+                    ratingReference.child(mobileNo).setValue(rating);
+                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("mobile", mobileNo);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
+
+    }
+
 }

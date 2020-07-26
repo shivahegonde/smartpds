@@ -40,7 +40,7 @@ public class DisplayOrdersActivity extends AppCompatActivity {
         Toast.makeText(this, "orderID : "+orderId, Toast.LENGTH_SHORT).show();
 
         FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
-        Query orderList =firebaseDatabase.getReference("Orders").child(orderId);
+        Query orderList =firebaseDatabase.getReference("Orders").child(orderId).orderByChild("orderPlaced").equalTo("yes");
         FirebaseRecyclerOptions<Orders> options = new FirebaseRecyclerOptions.Builder<Orders>()
                 .setQuery(orderList, Orders.class)
                 .build();
