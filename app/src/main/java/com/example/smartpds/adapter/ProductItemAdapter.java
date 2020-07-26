@@ -123,6 +123,21 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
                         String quantity = dataSnapshot.child("quanity").getValue(String.class);
                         model.setCartUserQuntity(quantity);
                         holder.quntity.setText(quantity);
+                        if (productId.equalsIgnoreCase("rava")){
+                            holder.mimageView.setImageResource(R.drawable.rava);
+                        }
+                        else if(productId.equalsIgnoreCase("wheat")){
+                            holder.mimageView.setImageResource(R.drawable.wheat);
+                        }
+                        else if (productId.equalsIgnoreCase("peanuts")){
+                            holder.mimageView.setImageResource(R.drawable.peanuts);
+                        }
+                        else if(productId.equalsIgnoreCase("oil")){
+                            holder.mimageView.setImageResource(R.drawable.oil);
+                        }
+                        else if(productId.equalsIgnoreCase("rice")){
+                            holder.mimageView.setImageResource(R.drawable.rice);
+                        }
                         int price = Integer.parseInt(model.getPrice()) * Integer.parseInt(quantity);
                         String newPrice = String.valueOf(price);
                         model.setCartPriceQuantity(newPrice);

@@ -84,8 +84,8 @@ public class CartActivity extends AppCompatActivity {
                         totalPriceOfCart += modelPricce;
                     }
 
-
                 }
+
                 String totalprice = String.valueOf(totalPriceOfCart);
                 totalPrice.setText(totalprice);
             }

@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/linerShopdetail"
             android:orientation="vertical"
-            android:layout_marginTop="0dp"
             android:layout_gravity="center"
             android:textAlignment="center">
             <TextView
@@ -46,11 +45,12 @@
                 android:id="@+id/Distributername"
                 android:text="DistributerName"
                 android:textSize="25dp"
+                android:textStyle="bold"
                 >
 
             </TextView>
             <LinearLayout
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <TextView

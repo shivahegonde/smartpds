@@ -14,6 +14,8 @@ import com.example.smartpds.model.Product;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
+import java.util.Objects;
+
 
 public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.CartViewHolder> {
 
@@ -85,6 +87,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
     protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Product model) {
 
         final String productId=getSnapshots().getSnapshot(position).getKey().toString();
+
         if (productId.equalsIgnoreCase("rava")){
             holder.mItemIcon.setImageResource(R.drawable.rava);
         }
@@ -94,7 +97,19 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
         else if (productId.equalsIgnoreCase("peanuts")){
             holder.mItemIcon.setImageResource(R.drawable.peanuts);
         }
+        else if(productId.equalsIgnoreCase("oil")){
+            holder.mItemIcon.setImageResource(R.drawable.oil);
+        }
+        else if(productId.equalsIgnoreCase("rice")){
+            holder.mItemIcon.setImageResource(R.drawable.rice);
+
+        }
+        else if (productId.equalsIgnoreCase("status")){
+            holder.itemView.setVisibility(View.GONE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+        }
        // holder.mItemIcon.setImageResource(currentItem.getCartItemImg());
+
         holder.mItemName.setText(productId);
         holder.mItemPrice.setText(model.getPrice());
         holder.mItemQuantity.setText(model.getQuanity());
