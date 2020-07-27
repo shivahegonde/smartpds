@@ -40,7 +40,7 @@ public class DistributerShop extends AppCompatActivity {
    // private ShopItemAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     FirebaseDatabase db;
-    DatabaseReference documentReference,ratingReference;
+    DatabaseReference documentReference,ratingReference,quantityReference;
     final static String DISTRIBUTER_MOBILE_NUMBER="distributer_mobile_number";
     String ShopId;
     TextView distributerName,shopLocation,shopPinCode,shopContact,shopName,quantity,price;
@@ -75,8 +75,9 @@ public class DistributerShop extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance();
 
-        documentReference = db.getReference("Distributors/" + ShopId);
+        documentReference = db.getReference("Cart/" + ShopId);
         ratingReference = db.getReference("DistributorRatings/" + ShopId);
+        quantityReference = db.getReference("DistributorsProducts").child(ShopId);
 //        ratingReference = db.getReference("DistributorRatings/" + "0000077667");
 
         documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -181,6 +182,7 @@ public class DistributerShop extends AppCompatActivity {
                 //        intent.putExtra(TOTAL_PRICE , totalPriceOfCart);
                 intent.putExtra("customerMobile" ,customerMobile );
                 intent.putExtra("distributorMobile",ShopId);
+                intent.putExtra("isDistributor","no");
                 startActivity(intent);
             }
 
@@ -200,15 +202,29 @@ public class DistributerShop extends AppCompatActivity {
 
             @Override
             public void addQuantityClick(Product product, String productName, TextView v) {
-                int newQuantity1 = Integer.parseInt(product.getCartUserQuntity())+1;
-                String newQuantity = String.valueOf(newQuantity1);
-                product.setCartUserQuntity(newQuantity);
-                v.setText(newQuantity);
-                int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(product.getPrice());
-                String newPrice = String.valueOf(price);
+quantityReference.child(productName).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        String productQuantityRemaining=dataSnapshot.getValue(String.class);
+        if (Integer.parseInt(productQuantityRemaining)>0){
+            int newQuantity1 = Integer.parseInt(product.getCartUserQuntity())+1;
+            String newQuantity = String.valueOf(newQuantity1);
+            product.setCartUserQuntity(newQuantity);
+            v.setText(newQuantity);
+            int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(product.getPrice());
+            String newPrice = String.valueOf(price);
 
-                documentReference.child(productName).child("quanity").setValue(newQuantity);
-                documentReference.child(productName).child("price").setValue(newPrice);
+            documentReference.child(productName).child("quanity").setValue(newQuantity);
+            documentReference.child(productName).child("price").setValue(newPrice);
+
+        }
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+    }
+});
 
             }
 
@@ -216,13 +232,15 @@ public class DistributerShop extends AppCompatActivity {
             public void removeQuantityClick(Product product , String productName  , TextView v) {
 
                 int newQuantity1 = Integer.parseInt(product.getCartUserQuntity())-1;
-                String newQuantity = String.valueOf(newQuantity1);
-                product.setCartUserQuntity(newQuantity);
-                v.setText(newQuantity);
-                int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(product.getPrice());
-                String newPrice = String.valueOf(price);
-                documentReference.child(productName).child("quanity").setValue(newQuantity);
-                documentReference.child(productName).child("price").setValue(newPrice);
+                if(newQuantity1>=0) {
+                    String newQuantity = String.valueOf(newQuantity1);
+                    product.setCartUserQuntity(newQuantity);
+                    v.setText(newQuantity);
+                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(product.getPrice());
+                    String newPrice = String.valueOf(price);
+                    documentReference.child(productName).child("quanity").setValue(newQuantity);
+                    documentReference.child(productName).child("price").setValue(newPrice);
+                }
             }
         });
 

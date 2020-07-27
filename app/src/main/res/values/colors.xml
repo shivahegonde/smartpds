@@ -348,6 +348,37 @@
     <color name="grey_1000">#1a1a1a</color>
 
 
+    <color name="quantum_black_100">#ff000000</color>
+    <color name="quantum_black_500">#000000</color>
+    <color name="quantum_black_divider">#1f000000</color>
+    <color name="quantum_black_hint_text">#61000000</color>
+    <color name="quantum_black_secondary_text">#89000000</color>
+    <color name="quantum_black_text">#dd000000</color>
+    <color name="quantum_bluegrey100">#ffcfd8dc</color>
+    <color name="quantum_bluegrey200">#ffb0bec5</color>
+    <color name="quantum_bluegrey300">#ff90a4ae</color>
+    <color name="quantum_bluegrey400">#ff78909c</color>
+    <color name="quantum_bluegrey50">#ffeceff1</color>
+    <color name="quantum_bluegrey500">#ff607d8b</color>
+    <color name="quantum_bluegrey600">#ff546e7a</color>
+    <color name="quantum_bluegrey700">#ff455a64</color>
+    <color name="quantum_bluegrey800">#ff37474f</color>
+    <color name="quantum_bluegrey900">#ff263238</color>
+    <color name="quantum_bluegrey950">#ff21272b</color>
+    <color name="quantum_brown">@color/quantum_brown500</color>
+    <color name="quantum_brown100">#ffd7ccc8</color>
+    <color name="quantum_brown200">#ffbcaaa4</color>
+    <color name="quantum_brown300">#ffa1887f</color>
+    <color name="quantum_brown400">#ff8d6e63</color>
+    <color name="quantum_brown50">#ffefebe9</color>
+    <color name="quantum_brown500">#ff795548</color>
+    <color name="quantum_brown600">#ff6d4c41</color>
+    <color name="quantum_brown700">#ff5d4037</color>
+    <color name="quantum_brown800">#ff4e342e</color>
+    <color name="quantum_brown900">#ff3e2723</color>
+
+
+
     <!--for random color generator -->
     <array name="mdcolor_random">
         <item type="color">#e91e63</item>

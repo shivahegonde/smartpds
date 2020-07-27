@@ -42,7 +42,7 @@ public class CartActivity extends AppCompatActivity {
     int totalPriceOfCart = 0;
     public static String uniqueUserId = "8668283745";
     public static String userId, distributorId;
-
+    String isDistributor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class CartActivity extends AppCompatActivity {
         totalPrice = findViewById(R.id.totalamountvalue);
         userId = getIntent().getStringExtra("customerMobile");
         distributorId = getIntent().getStringExtra("distributorMobile");
+        isDistributor = getIntent().getStringExtra("isDistributor");
 
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -114,6 +115,7 @@ public class CartActivity extends AppCompatActivity {
                 intent.putExtra("phonenumber", userId);
                 intent.putExtra("distributormobile", distributorId);
                 intent.putExtra("key",orderId);
+                intent.putExtra("isDistributor",isDistributor);
                 intent.putExtra("totalamount", "" + totalPriceOfCart);
                 startActivity(intent);
                 Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();

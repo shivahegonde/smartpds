@@ -44,7 +44,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     private EditText editText;
     private Button signIn;
     TextView otpText;
-    String phonenumber, userType, mobileNo, key;
+    String phonenumber, userType, mobileNo, key,isDistributor;
     int totalAmount;
     int newPrice = 0;
     RatingBar shopRating;
@@ -73,6 +73,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
         otpText.setText("Enter OTP for your Order");
         userType = getIntent().getStringExtra("usertype");
         mobileNo = getIntent().getStringExtra("phonenumber");
+        isDistributor = getIntent().getStringExtra("isDistributor");
         distributorMobileNo = getIntent().getStringExtra("distributormobile");
         totalAmount = Integer.parseInt(getIntent().getStringExtra("totalamount"));
         phonenumber = getIntent().getStringExtra("phonenumber");
@@ -154,8 +155,14 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                                 cartRef.removeValue();
 
                                 try {
-                                    showRatingDialog(VerifyPhoneActivityForOrder.this,"Rate This Distributor");
-                                } catch (IOException e) {
+                                    if (!isDistributor.equalsIgnoreCase("yes")) {
+                                        showRatingDialog(VerifyPhoneActivityForOrder.this, "Rate This Distributor");
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }catch (IOException e) {
                                     e.printStackTrace();
                                 }
 
