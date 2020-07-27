@@ -160,7 +160,10 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                                     }
                                     else
                                     {
-
+                                        Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DistributorDashBoard.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.putExtra("mobile", distributorMobileNo);
+                                        startActivity(intent);
                                     }
                                 }catch (IOException e) {
                                     e.printStackTrace();
