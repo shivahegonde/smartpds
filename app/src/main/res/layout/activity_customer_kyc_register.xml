@@ -14,7 +14,8 @@
     <LinearLayout
         android:layout_gravity="center"
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -22,20 +23,25 @@
             android:id="@+id/shopchoose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose Shop License" />
+            android:gravity="center"
+            android:background="@drawable/newupload"
+            android:text="  Profile Picture" />
 
         <Button
             android:id="@+id/shopupload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-android:layout_marginLeft="20dp"
+            android:background="@color/green_500"
+            android:layout_marginLeft="20dp"
             android:text="Upload" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout_pan"
-        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -43,19 +49,24 @@ android:layout_marginLeft="20dp"
             android:id="@+id/buttonChoose_pan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/newupload"
             android:text="Choose Pan Card" />
 
         <Button
             android:id="@+id/buttonUploadPan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
+            android:background="@color/green_500"
+            android:layout_marginLeft="20dp"
             android:text="Upload" />
 
     </LinearLayout>
     <LinearLayout
         android:id="@+id/linearLayout_adhar"
-        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -63,13 +74,16 @@ android:layout_marginLeft="20dp"
             android:id="@+id/buttonChooseAadhar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose Aadhar Card" />
+            android:gravity="center"
+            android:background="@drawable/newupload"
+            android:text="        Choose Aadhar Card" />
 
         <Button
             android:id="@+id/buttonUploadadhar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:background="@color/green_500"
             android:text="Upload" />
 
     </LinearLayout>
@@ -79,6 +93,7 @@ android:layout_marginLeft="20dp"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:background="#B962EF"
         android:text="Done" />
 
 </LinearLayout>
