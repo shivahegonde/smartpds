@@ -16,7 +16,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartpds.shop.DistributerShop;
+import com.example.smartpds.model.Customers;
+import com.example.smartpds.model.Distributer;
+import com.example.smartpds.model.Review;
+import com.example.smartpds.shop.OnCustomerInfo;
+import com.example.smartpds.shop.OnGetInfoListner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -33,6 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivityForOrder extends AppCompatActivity {
@@ -49,11 +55,13 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     int newPrice = 0;
     RatingBar shopRating;
     EditText review;
-    DatabaseReference ratingReference,reviewReference;
+    DatabaseReference ratingReference,reviewReference , reviewschemaReference;
     FirebaseDatabase db;
 
     FirebaseAuthSettings firebaseAuthSettings;
     private String distributorMobileNo;
+    private DatabaseReference distributerreference;
+    private DatabaseReference customerReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,10 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 //        sendVerificationCode("+91"+phonenumber);
         ratingReference = db.getReference("DistributorRatings/" + distributorMobileNo);
         reviewReference = db.getReference("DistributorReviews/" + distributorMobileNo);
+        reviewschemaReference  = db.getReference("Reviews");
+         distributerreference = db.getReference("Distributors/" + distributorMobileNo);
+        customerReference = db.getReference("Customers/" + mobileNo);
+
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -405,22 +417,84 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                 String rating = "" +shopRating.getRating();
                 String reviewText=review.getText().toString();
 
-                if (reviewText!="" && reviewText.length()!=2){
-                    reviewReference.child(mobileNo).setValue(reviewText);
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
-                }
-                if (rating.length()!=0) {
-                    ratingReference.child(mobileNo).setValue(rating);
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
-                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("mobile", mobileNo);
-                startActivity(intent);
+                Review review1= new Review();
+                review1.setRating(rating);
+                review1.setReview(reviewText);
+                review1.setShopid(distributorMobileNo);
+
+                getDisributerInfo(distributorMobileNo, new OnGetInfoListner() {
+                    @Override
+                    public void onDistributerLoaded(Distributer distributor) {
+                        review1.setShopname(distributor.getShopname());
+                        Date date = Calendar.getInstance().getTime();
+                        review1.setDate(date);
+                        review1.setCity(distributor.getCity());
+
+                        getCustomerName(mobileNo , new OnCustomerInfo() {
+                            @Override
+                            public void onCustomerInfoLoaded(Customers customer) {
+                                review1.setCustomername(customer.getFname() + customer.getLname());
+
+                                if (reviewText!="" && reviewText.length()!=2 && rating.length()!=0) {
+                                        reviewschemaReference.child(mobileNo).setValue(review1);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+
+                                if (reviewText!="" && reviewText.length()!=2){
+                                    reviewReference.child(mobileNo).setValue(reviewText);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                if (rating.length()!=0) {
+                                    ratingReference.child(mobileNo).setValue(rating);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                dialog.dismiss();
+                                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("mobile", mobileNo);
+                                startActivity(intent);
+                            }
+                        });
+
+                    }
+                });
             }
         });
         dialog.show();
+
+    }
+
+    private void getCustomerName(String mobileNo , OnCustomerInfo onCustomerInfo) {
+        customerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Customers customer = dataSnapshot.getValue(Customers.class);
+                onCustomerInfo.onCustomerInfoLoaded(customer);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void getDisributerInfo(String distributorMobileNo , OnGetInfoListner onGetInfoListner) {
+
+        distributerreference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+             Distributer distributor = dataSnapshot.getValue(Distributer.class);
+             onGetInfoListner.onDistributerLoaded(distributor);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
