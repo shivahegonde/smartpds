@@ -114,22 +114,26 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                 }
 //                verifyCode(code);
 
-                checkQuantityAndPrice(new OnGetStatusListner() {
-                    @Override
-                    public void onStatus(boolean status) {
+//                checkQuantityAndPrice(new OnGetStatusListner() {
+//                    @Override
+//                    public void onStatus(boolean status) {
+//
+//                        if (status) {
 
-                        if (status) {
+                          
                             placeOrder(code);
-                        }
-                        else {
-                            try {
-                                showErrorDialog(VerifyPhoneActivityForOrder.this , "Product Quantity Error");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
+//
+//
+//                        }
+//                        else {
+//                            try {
+//                                showErrorDialog(VerifyPhoneActivityForOrder.this , "Product Quantity Error");
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
 
 //                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
