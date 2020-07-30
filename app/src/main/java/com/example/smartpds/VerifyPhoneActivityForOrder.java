@@ -72,7 +72,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify_phone);
+        setContentView(R.layout.activity_payment_verification);
         userType = getIntent().getStringExtra("usertype");
         key = getIntent().getStringExtra("key");
         distributerOrderId = getIntent().getStringExtra("Distributerkey");
@@ -84,8 +84,8 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 
         firebaseAuthSettings = mAuth.getFirebaseAuthSettings();
         editText = findViewById(R.id.edittextcode);
-        otpText = findViewById(R.id.textview);
-        otpText.setText("Enter OTP for your Order");
+//        otpText = findViewById(R.id.textview);
+//        otpText.setText("Enter OTP for your Order");
         userType = getIntent().getStringExtra("usertype");
         mobileNo = getIntent().getStringExtra("phonenumber");
         isDistributor = getIntent().getStringExtra("isDistributor");

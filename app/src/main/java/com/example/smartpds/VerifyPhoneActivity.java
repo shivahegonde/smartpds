@@ -43,7 +43,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
-userType=getIntent().getStringExtra("usertype");
+
+        userType=getIntent().getStringExtra("usertype");
         mAuth = FirebaseAuth.getInstance();
         signIn = findViewById(R.id.buttonsignin);
         progressBar = findViewById(R.id.progressbar);
@@ -155,7 +156,6 @@ userType=getIntent().getStringExtra("usertype");
                     }
                 });
     }
-
 
 
     private void sendVerificationCode(String number) {

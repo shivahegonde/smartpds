@@ -68,4 +68,15 @@
         <item name="android:textColor">@color/grey_90</item>
     </style>
 
+    <style name="EditText.White" parent="@style/AppTheme">
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="colorControlNormal">@color/grey_10</item>
+    </style>
+
+    <style name="EditText.White.Hint" parent="@style/EditText.White">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorHint">@color/grey_10</item>
+    </style>
+
 </resources>

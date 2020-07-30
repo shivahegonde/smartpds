@@ -39,5 +39,6 @@
 
     <string name="my_cart">My Cart</string>
     <string name="delete">DELETE</string>
+    <string name="payment_string">We have sent verification code to your registered mobile number</string>
 
 </resources>

@@ -34,6 +34,8 @@ String distributorMobile;
         distributorMobile =getIntent().getStringExtra("distributormobile");
         textViewName = (TextView) findViewById(R.id.textViewName);
         qrScan = new IntentIntegrator(this);
+
+        qrScan.initiateScan();
         buttonScan.setOnClickListener(this);
 
 
