@@ -9,17 +9,17 @@
 
         <item
             android:id="@+id/nav_wallet"
-            android:icon="@drawable/digiration"
+            android:icon="@drawable/wallet"
             android:title="Wallet" />
 
         <item
             android:id="@+id/nav_Quata"
-            android:icon="@drawable/digiration"
+            android:icon="@drawable/quota"
             android:title="Quota" />
 
         <item
             android:id="@+id/nav_orders"
-            android:icon="@drawable/digiration"
+            android:icon="@drawable/shop"
             android:title="Orders" />
     </group>
 
