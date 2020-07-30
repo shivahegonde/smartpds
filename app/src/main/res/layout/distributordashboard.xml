@@ -307,6 +307,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="QR Generator"
+            android:visibility="gone"
             android:id="@+id/generateqr"/>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
