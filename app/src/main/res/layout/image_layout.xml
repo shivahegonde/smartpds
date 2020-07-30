@@ -50,6 +50,15 @@
                 android:textSize="20sp"
                 android:text="OK"
                 android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/green"
+                android:textSize="20sp"
+               android:layout_marginLeft="30dp"
+                android:text="Save"
+                android:textColor="#ffffffff" />
 
 
 

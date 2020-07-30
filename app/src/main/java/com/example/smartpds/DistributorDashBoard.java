@@ -231,6 +231,8 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         dialog.setContentView(R.layout.image_layout);
         String name = Constants.name;
         ImageView myImage = (ImageView) dialog.findViewById(R.id.a);
+
+
         Picasso.with(this).load(qrlink).into(myImage);
 //        myImage.setImageBitmap(mIcon_val);
 //            myImage.setImageBitmap(myBitmap);
@@ -244,12 +246,29 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
             text.setText("Please Login to View Your QR");
         }
         Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
-        dialogButton1.setOnClickListener(new View.OnClickListener() {
+
+
+        //below code add for Download QR
+        Button dialogButton2 = (Button) dialog.findViewById(R.id.btn2);
+
+        dialogButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new DownloadQr(qrlink, myImage,mobile , getApplicationContext() ).execute() ;
                 dialog.dismiss();
             }
         });
+
+        ////
+        dialogButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
 
     }
