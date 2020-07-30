@@ -1,7 +1,7 @@
 package com.example.smartpds.model;
 
 public class Customers {
-    boolean accountStatus;
+    String accountStatus;
     String address;
     String city;
     String email;
@@ -13,11 +13,11 @@ public class Customers {
     String shopname;
     String state;
     long walletAmmount;
-    public boolean getAccountStatus() {
+    public String getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(boolean accountStatus) {
+    public void setAccountStatus(String accountStatus) {
         this.accountStatus = accountStatus;
     }
 
@@ -104,7 +104,7 @@ public class Customers {
     public Customers() {
     }
 
-    public Customers(boolean accountStatus, String address, String city, String email, String fname, boolean kycDone, String lname, String mobile, long pincode, String shopname, String state, long walletAmmount) {
+    public Customers(String accountStatus, String address, String city, String email, String fname, boolean kycDone, String lname, String mobile, long pincode, String shopname, String state, long walletAmmount) {
         this.accountStatus = accountStatus;
         this.address = address;
         this.city = city;

@@ -1,8 +1,5 @@
 package com.example.smartpds;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -22,10 +19,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.net.InternetDomainName;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -111,8 +110,7 @@ String name;
             Toast.makeText(this, "Image QR Path   " + savePath + name + ".jpg", Toast.LENGTH_SHORT).show();
             try {
 
-                ///
-
+                ////////
                 WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
                 Display display = manager.getDefaultDisplay();
                 Point point = new Point();

@@ -21,7 +21,6 @@ import com.example.smartpds.model.Distributer;
 import com.example.smartpds.model.Product;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +53,8 @@ public class DistributerShop extends AppCompatActivity {
     ProductItemAdapter productItemAdapter;
     RatingBar distributorRatingBar ;
     Button submitDistributorRating;
+    private DatabaseReference DistributerReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +76,15 @@ public class DistributerShop extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance();
 
+
+        //isuues fix distributer info not shown --raj
+        DistributerReference = db.getReference("Distributors/" + ShopId);
         documentReference = db.getReference("Cart/" + ShopId);
         ratingReference = db.getReference("DistributorRatings/" + ShopId);
         quantityReference = db.getReference("DistributorsProducts").child(ShopId);
 //        ratingReference = db.getReference("DistributorRatings/" + "0000077667");
 
-        documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        DistributerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
@@ -206,6 +210,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         String productQuantityRemaining=dataSnapshot.getValue(String.class);
+        if (product!=null)
         if (Integer.parseInt(productQuantityRemaining)>0){
             int newQuantity1 = Integer.parseInt(product.getCartUserQuntity())+1;
             String newQuantity = String.valueOf(newQuantity1);

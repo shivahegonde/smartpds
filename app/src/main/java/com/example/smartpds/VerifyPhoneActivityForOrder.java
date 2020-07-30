@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,7 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartpds.shop.DistributerShop;
+import com.example.smartpds.model.Customers;
+import com.example.smartpds.model.Distributer;
+import com.example.smartpds.model.Review;
+import com.example.smartpds.shop.OnCustomerInfo;
+import com.example.smartpds.shop.OnGetInfoListner;
+import com.example.smartpds.shop.OnGetStatusListner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -30,9 +36,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivityForOrder extends AppCompatActivity {
@@ -49,11 +61,13 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     int newPrice = 0;
     RatingBar shopRating;
     EditText review;
-    DatabaseReference ratingReference,reviewReference;
+    DatabaseReference ratingReference,reviewReference , reviewschemaReference;
     FirebaseDatabase db;
 
     FirebaseAuthSettings firebaseAuthSettings;
     private String distributorMobileNo;
+    private DatabaseReference distributerreference;
+    private DatabaseReference customerReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +94,10 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 //        sendVerificationCode("+91"+phonenumber);
         ratingReference = db.getReference("DistributorRatings/" + distributorMobileNo);
         reviewReference = db.getReference("DistributorReviews/" + distributorMobileNo);
+        reviewschemaReference  = db.getReference("Reviews");
+         distributerreference = db.getReference("Distributors/" + distributorMobileNo);
+        customerReference = db.getReference("Customers/" + mobileNo);
+
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +113,24 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                     return;
                 }
 //                verifyCode(code);
-                placeOrder(code);
+
+                checkQuantityAndPrice(new OnGetStatusListner() {
+                    @Override
+                    public void onStatus(boolean status) {
+
+                        if (status) {
+                            placeOrder(code);
+                        }
+                        else {
+                            try {
+                                showErrorDialog(VerifyPhoneActivityForOrder.this , "Product Quantity Error");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
 //                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                intent.putExtra("mobile", phonenumber);
@@ -103,6 +138,47 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void checkQuantityAndPrice(OnGetStatusListner onGetStatusListner) {
+
+        final DatabaseReference distributerProduct = FirebaseDatabase.getInstance().getReference("DistributorsProducts/" + distributorMobileNo);
+
+
+        distributerProduct.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            boolean status = true;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot product : dataSnapshot.getChildren())
+                {
+                    String quantity = product.child("quantity").getValue(String.class);
+                    int q = Integer.parseInt(quantity);
+                    if (q==0)
+                    {
+                        status =false ;
+                        break;
+                    }
+                }
+
+                if (status)
+                {
+                    onGetStatusListner.onStatus(true);
+                }
+                else {
+                    onGetStatusListner.onStatus(false);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -119,7 +195,6 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 
 
         customerWallet.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -150,11 +225,25 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                                     newPrice = amount + totalAmount;
                                     Toast.makeText(VerifyPhoneActivityForOrder.this, "Distributor Wallet Updated Successfully", Toast.LENGTH_SHORT).show();
                                 }
-                                distributorWallet.setValue(newPrice);
-                                rootRef.child(key).child("orderPlaced").setValue("yes");
-                                cartRef.removeValue();
 
-                                try {
+
+                                distributorWallet.setValue(newPrice).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        rootRef.child(key).child("orderPlaced").setValue("yes").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                updateQuantityAtDistributer();
+
+                                            }
+                                        });
+                                    }
+                                });
+
+//                                cartRef.removeValue();  no need i fix it in  updateQuantityAtDistributer();
+
+                                try{
                                     if (!isDistributor.equalsIgnoreCase("yes")) {
                                         showRatingDialog(VerifyPhoneActivityForOrder.this, "Rate This Distributor");
                                     }
@@ -192,6 +281,69 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 
             }
         });
+
+
+
+    }
+
+    private void minusQuantity(String productname ,DatabaseReference productRef  , Integer quantity) {
+
+        final DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart/" + mobileNo);
+        productRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                String currentValue = mutableData.getValue(String.class);
+                if (currentValue == null) {
+                 //   mutableData.setValue(1);
+                } else {
+                    int updatedQuantity = Integer.parseInt(currentValue) - quantity;
+                    String updateQuantity = String.valueOf(updatedQuantity);
+                    mutableData.setValue(updateQuantity);
+                }
+
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                cartRef.child(productname).removeValue();
+
+            }
+        });
+    }
+
+    private void updateQuantityAtDistributer() {
+        final DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart/" + mobileNo);
+        final DatabaseReference distributerProduct = FirebaseDatabase.getInstance().getReference("DistributorsProducts/" + distributorMobileNo);
+
+
+        cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+
+                    for (DataSnapshot cartSnapshot: dataSnapshot.getChildren()) {
+
+                        if (cartSnapshot.getKey()!=null && !cartSnapshot.getKey().equals("status")) {
+                            String quantity = Objects.requireNonNull(cartSnapshot.child("quanity").getValue(String.class));
+                            String productName = cartSnapshot.getKey().toString();
+                            int quantity1 = Integer.parseInt(quantity) ;
+                            Log.d("TAG", "onDataChange: " + quantity +" productname : "+ productName + " productQuantity : "+ quantity1);
+                            assert productName != null;
+                            minusQuantity(productName, distributerProduct.child(productName).child("quantity"), quantity1);
+                    }
+
+
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
 
 
@@ -405,22 +557,81 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                 String rating = "" +shopRating.getRating();
                 String reviewText=review.getText().toString();
 
-                if (reviewText!="" && reviewText.length()!=2){
-                    reviewReference.child(mobileNo).setValue(reviewText);
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
-                }
-                if (rating.length()!=0) {
-                    ratingReference.child(mobileNo).setValue(rating);
-                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
-                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("mobile", mobileNo);
-                startActivity(intent);
+                Review review1= new Review();
+                review1.setRating(rating);
+                review1.setReview(reviewText);
+                review1.setShopid(distributorMobileNo);
+
+                getDisributerInfo(distributorMobileNo, new OnGetInfoListner() {
+                    @Override
+                    public void onDistributerLoaded(Distributer distributor) {
+                        review1.setShopname(distributor.getShopname());
+                         Date date = Calendar.getInstance().getTime();
+                        String formateddate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+                        review1.setDate(formateddate);
+                        review1.setCity(distributor.getCity());
+                        getCustomerName(mobileNo , new OnCustomerInfo() {
+                            @Override
+                            public void onCustomerInfoLoaded(Customers customer) {
+                                review1.setCustomername(customer.getFname() + customer.getLname());
+                                if (reviewText!="" && reviewText.length()!=2 && rating.length()!=0) {
+                                        reviewschemaReference.child(mobileNo).setValue(review1);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                if (reviewText!="" && reviewText.length()!=2){
+                                    reviewReference.child(mobileNo).setValue(reviewText);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Review Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                if (rating.length()!=0) {
+                                    ratingReference.child(mobileNo).setValue(rating);
+                                    Toast.makeText(VerifyPhoneActivityForOrder.this, "Rating Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                dialog.dismiss();
+                                Intent intent = new Intent(VerifyPhoneActivityForOrder.this, DashBoard.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("mobile", mobileNo);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                });
             }
         });
         dialog.show();
+
+    }
+
+    private void getCustomerName(String mobileNo , OnCustomerInfo onCustomerInfo) {
+        customerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Customers customer = dataSnapshot.getValue(Customers.class);
+                onCustomerInfo.onCustomerInfoLoaded(customer);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void getDisributerInfo(String distributorMobileNo , OnGetInfoListner onGetInfoListner) {
+
+        distributerreference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+             Distributer distributor = dataSnapshot.getValue(Distributer.class);
+             onGetInfoListner.onDistributerLoaded(distributor);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
