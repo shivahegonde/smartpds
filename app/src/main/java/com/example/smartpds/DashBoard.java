@@ -1,6 +1,7 @@
 package com.example.smartpds;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +55,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
     private ImageView customerProfilePic;
     private Long walletAmount;
     private static final String CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         drawerLayout = (DrawerLayout) findViewById(R.id.user_drawer_layout);
         navigationView = findViewById(R.id.user_nav_view);
         navigationView.bringToFront();
+        pref = getSharedPreferences("user_details",MODE_PRIVATE);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
                 (
                         this,
@@ -88,6 +92,11 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         customerProfilePic = mNavigationView.getHeaderView(0).findViewById(R.id.customer_profile_pic);
         notificationManager = NotificationManagerCompat.from(this);
         mobile = getIntent().getStringExtra("mobile");
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("username",mobile);
+        editor.putString("usertype","customer");
+        editor.commit();
+        Toast.makeText(this, "Session Started", Toast.LENGTH_SHORT).show();
         final DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
         mDatabase = FirebaseDatabase.getInstance().getReference("Customers").child(mobile);
         mDatabaseKyc = FirebaseDatabase.getInstance().getReference("CustomerKYC").child(mobile);

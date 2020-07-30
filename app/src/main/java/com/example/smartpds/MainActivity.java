@@ -1,6 +1,7 @@
 package com.example.smartpds;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ String userType;
     private Spinner spinner;
     private EditText editText;
 
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,9 @@ String userType;
         userType=getIntent().getStringExtra("usertype");
         spinner = findViewById(R.id.spinnercountries);
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, CountryData.countryNames));
+
+
+
 
         editText = findViewById(R.id.edittextphone);
 
