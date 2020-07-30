@@ -149,12 +149,12 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
 
         Hash_file_maps = new HashMap<String, String>();
         sliderLayout = (SliderLayout) findViewById(R.id.slider);
-        Uri path1 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aaa);
-        Uri path2 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aab);
-        Uri path3 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aac);
-        Uri path4 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aad);
-        Uri path5 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aae);
-        Uri path6 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.aaf);
+        Uri path1 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationone);
+        Uri path2 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationtwo);
+        Uri path3 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationthree);
+        Uri path4 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationfour);
+        Uri path5 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationfive);
+        Uri path6 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationsix);
         String str1 = path1.toString();
         String str2 = path2.toString();
         String str3 = path3.toString();
