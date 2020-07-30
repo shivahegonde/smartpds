@@ -27,6 +27,7 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.smartpds.orderview.DisplayOrdersActivity;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -290,7 +291,11 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         switch (item.getItemId()) {
             case R.id.logout:
                 // Red item was selected
-                Intent intent = new Intent(DashBoard.this, Logout.class);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent(DashBoard.this, UserLogin.class);
+                startActivity(intent);
                 break;
             case R.id.exit:
                 // Green item was selected

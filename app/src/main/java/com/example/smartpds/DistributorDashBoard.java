@@ -249,7 +249,11 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         switch (item.getItemId()) {
             case R.id.logout:
                 // Red item was selected
-                Intent intent = new Intent(DistributorDashBoard.this, Logout.class);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent(DistributorDashBoard.this, UserLogin.class);
+                startActivity(intent);
                 break;
             case R.id.exit:
                 // Green item was selected
@@ -304,9 +308,12 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 menu.findItem(R.id.nav_login).setVisible(false);
                 break;
             case R.id.nav_logout:
-                menu.findItem(R.id.nav_logout).setVisible(false);
-                menu.findItem(R.id.nav_profile).setVisible(false);
-                menu.findItem(R.id.nav_login).setVisible(true);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.commit();
+                intent = new Intent(DistributorDashBoard.this, UserLogin.class);
+                startActivity(intent);
+
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
