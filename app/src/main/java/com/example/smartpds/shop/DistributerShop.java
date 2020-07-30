@@ -210,6 +210,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         String productQuantityRemaining=dataSnapshot.getValue(String.class);
+        if (product!=null)
         if (Integer.parseInt(productQuantityRemaining)>0){
             int newQuantity1 = Integer.parseInt(product.getCartUserQuntity())+1;
             String newQuantity = String.valueOf(newQuantity1);

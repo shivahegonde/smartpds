@@ -1,11 +1,9 @@
 package com.example.smartpds.model;
 
-import java.util.Date;
-
 public class Review {
    String city;
    String customername;
-   Date date;
+   String date;
   String  review;
    String shopname;
     String shopid;
@@ -30,11 +28,11 @@ public class Review {
         this.customername = customername;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
