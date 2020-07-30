@@ -87,6 +87,7 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:gravity="center"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView

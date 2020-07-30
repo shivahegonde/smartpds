@@ -230,6 +230,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.image_layout);
         String name = Constants.name;
+        TextView text2;
         ImageView myImage = (ImageView) dialog.findViewById(R.id.a);
         Picasso.with(this).load(qrlink).into(myImage);
 //        myImage.setImageBitmap(mIcon_val);
@@ -239,9 +240,9 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
             TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
             text.setText(name.toUpperCase() + " GROCERY SHOP");
         } else {
-            TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
-            text.setTextSize(15);
-            text.setText("Please Login to View Your QR");
+            text2 = (TextView) dialog.findViewById(R.id.text_dialog);
+            text2.setTextSize(15);
+            text2.setText("click here to download qr");
         }
         Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
         dialogButton1.setOnClickListener(new View.OnClickListener() {
