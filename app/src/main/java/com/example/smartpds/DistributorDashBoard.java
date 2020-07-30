@@ -25,7 +25,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.smartpds.orderview.DisplayOrdersActivity;
 import com.example.smartpds.orderview.DisplayOrdersActivityForDistributor;
-import com.example.smartpds.recyclerex.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +50,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     ImageView dialog,distributorPicture;
     String mobile;
     TextView distributorName, distributorEmail;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase,quota;
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
     SharedPreferences pref;
@@ -96,6 +95,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         editor.commit();
         Toast.makeText(this, "Session Started", Toast.LENGTH_SHORT).show();
         mDatabase = FirebaseDatabase.getInstance().getReference("Distributors").child(mobile);
+        quota = FirebaseDatabase.getInstance().getReference("DistributorsProducts").child(mobile);
         mDatabaseKyc = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(mobile);
 
         final DrawerLayout drawer = findViewById(R.id.distributor_drawer_layout);
@@ -124,7 +124,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
 
         mNavigationView.setNavigationItemSelectedListener(this);
         walletCard = findViewById(R.id.bankCard);
-        showQuota = findViewById(R.id.quotashow);
+//        showQuota = findViewById(R.id.quotashow);
         shopCard = findViewById(R.id.shop_card);
         walletCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,15 +168,15 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 startActivity(intent);
             }
         });
-        showQuota.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DistributorDashBoard.this, "Product Quota", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(DistributorDashBoard.this, ProductActivity.class);
-                intent.putExtra("mobile", mobile);
-                startActivity(intent);
-            }
-        });
+//        showQuota.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(DistributorDashBoard.this, "Product Quota", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(DistributorDashBoard.this, DistributerQuota.class);
+//                intent.putExtra("mobile", mobile);
+//                startActivity(intent);
+//            }
+//        });
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override

@@ -81,7 +81,7 @@ public class OrderAdapterForDistributor extends FirebaseRecyclerAdapter<Orders, 
 
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.order_card_layout, parent, false);
+                .inflate(R.layout.order_card_layout_for_distributor, parent, false);
 
         return new OrderViewHolder(view);
     }
@@ -89,6 +89,21 @@ public class OrderAdapterForDistributor extends FirebaseRecyclerAdapter<Orders, 
     private void setShopName(String customer, final TextView shopName) {
 
         shopName.setText(customer);
+        documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                {
+                    Customer customer = dataSnapshot.getValue(Customer.class);
+                    shopName.setText(customer.getFname()+" "+customer.getLname());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 //        documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:layout_toRightOf="@+id/menu_icon"
                     android:background="@android:color/transparent"
-                    android:hint="Digi Ration App"
+                    android:hint="राशन खाता"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:textColor="#FA615E5E"

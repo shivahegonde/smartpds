@@ -47,7 +47,7 @@ String userType;
 
                 String phoneNumber = "+" +code+ number;
                 Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, DistributorDashBoard.class);
+                Intent intent = new Intent(MainActivity.this, VerifyPhoneActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);

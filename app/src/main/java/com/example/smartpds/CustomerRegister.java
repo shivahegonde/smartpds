@@ -87,6 +87,7 @@ String name;
         customer.setCity(customerCity.getText().toString().trim());
         customer.setKycDone("no");
         customer.setWalletAmmount(200);
+        customer.setAccountStatus("pending");
         customer.setState(customerState.getText().toString().trim());
         customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 

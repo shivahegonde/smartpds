@@ -20,18 +20,18 @@ public class DistributerListActivity extends AppCompatActivity {
 
     private DistributerListAdapter DistributerListAdapterAdapter;
     private RecyclerView recyclerView;
-
+    String mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distributer_list);
-
+        mobile=getIntent().getStringExtra("mobile");
         recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseApp.initializeApp(this);
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        Query DistributerList =firebaseDatabase.getReference("Distributors");
+        Query DistributerList =firebaseDatabase.getReference("Distributors").child(mobile);
         FirebaseRecyclerOptions<Distributer> options = new FirebaseRecyclerOptions.Builder<Distributer>()
                 .setQuery(DistributerList, Distributer.class)
                 .build();

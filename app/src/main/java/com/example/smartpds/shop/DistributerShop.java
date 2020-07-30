@@ -153,13 +153,6 @@ public class DistributerShop extends AppCompatActivity {
             }
         });
 
-//        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-//        Query DistributerList =firebaseDatabase.getReference("DistributorsProducts").child(getInte);
-//        FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
-//                .setQuery(DistributerList, Product.class)
-//                .build();
-//
-
         mrecyclerView=findViewById(R.id.productsListRecyclerView);
         mrecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         FirebaseApp.initializeApp(this);
