@@ -20,7 +20,7 @@ public class Distributor {
     String shopImage;
     int pincode;
     int walletAmmount;
-    boolean kycDone;
+    String kycDone;
     boolean accountStatus;
 
     public String getAddress() {
@@ -63,11 +63,11 @@ public class Distributor {
         this.walletAmmount = walletAmmount;
     }
 
-    public boolean isKycDone() {
+    public String isKycDone() {
         return kycDone;
     }
 
-    public void setKycDone(boolean kycDone) {
+    public void setKycDone(String kycDone) {
         this.kycDone = kycDone;
     }
 

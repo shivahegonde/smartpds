@@ -24,6 +24,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.smartpds.orderview.DisplayOrdersActivity;
+import com.example.smartpds.orderview.DisplayOrdersActivityForDistributor;
 import com.example.smartpds.recyclerex.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -150,7 +151,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
             public void onClick(View view) {
 
                 Toast.makeText(DistributorDashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
-                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivityForDistributor.class);
                 showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
                 startActivity(showOrders);
 

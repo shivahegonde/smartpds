@@ -43,7 +43,7 @@ import androidmads.library.qrgenearator.QRGEncoder;
 import androidmads.library.qrgenearator.QRGSaver;
 
 public class DistributorRegister extends AppCompatActivity {
-EditText firstName,lastName, mobileNo,emailId,shopName;
+EditText firstName,lastName, mobileNo,emailId,shopName,distributorAddress,distributorCity,distributorPincode,distributorState;
 Button registerButton;
 static int count=0;
     private DatabaseReference mDatabase;
@@ -65,6 +65,10 @@ Distributor distributor;
         mobileNo=findViewById(R.id.mobno);
         shopName=findViewById(R.id.shop_name);
         emailId=findViewById(R.id.email);
+        distributorCity=findViewById(R.id.city);
+        distributorPincode=findViewById(R.id.pincode);
+        distributorAddress=findViewById(R.id.address);
+        distributorState=findViewById(R.id.state);
         mobile=getIntent().getStringExtra("mobile");
         storageReference = FirebaseStorage.getInstance().getReference();
         registerButton=findViewById(R.id.register);
@@ -84,12 +88,12 @@ Distributor distributor;
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(""+mobileNo.getText());
         distributor.setShopname(shopNameString);
         distributor.setAccountStatus(false);
-        distributor.setAddress("");
-        distributor.setCity("");
-        distributor.setKycDone(false);
-        distributor.setWalletAmmount(100);
-        distributor.setState("");
-        distributor.setPincode(121212);
+        distributor.setAddress(distributorAddress.getText().toString().trim());
+        distributor.setCity(distributorCity.getText().toString().trim());
+        distributor.setKycDone("no");
+        distributor.setWalletAmmount(0);
+        distributor.setState(distributorState.getText().toString().trim());
+        distributor.setPincode(Integer.parseInt(distributorPincode.getText().toString().trim()));
         distributor.setShopImage("https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/uploads%2Fdigirationshop.png?alt=media&token=08517b1d-3ff5-4c0d-a86b-0c9250341e9e");
         mobile=mobileNo.getText().toString().trim();
         databaseReference.addValueEventListener(new ValueEventListener() {

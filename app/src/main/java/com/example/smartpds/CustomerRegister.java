@@ -43,7 +43,7 @@ import androidmads.library.qrgenearator.QRGEncoder;
 import androidmads.library.qrgenearator.QRGSaver;
 
 public class CustomerRegister extends AppCompatActivity {
-EditText firstName,lastName, mobileNo,emailId;
+EditText firstName,lastName, mobileNo,emailId,customerAddress,customerCity,customerPincode,customerState;
 Button registerButton;
     QRGEncoder qrgEncoder;
     private DatabaseReference mDatabase;
@@ -65,6 +65,10 @@ String name;
         lastName=findViewById(R.id.lname);
         mobileNo=findViewById(R.id.mobno);
         emailId=findViewById(R.id.email);
+        customerAddress=findViewById(R.id.address);
+        customerCity=findViewById(R.id.city);
+        customerPincode=findViewById(R.id.pincode);
+        customerState=findViewById(R.id.state);
         registerButton=findViewById(R.id.register);
         databaseReference= FirebaseDatabase.getInstance().getReference("Customers");
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(""+mobileNo.getText());
@@ -79,12 +83,12 @@ String name;
         customer.setEmail(emailId.getText().toString().trim());
         name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
         final String mobile=mobileNo.getText().toString().trim();
-        customer.setAddress("");
-        customer.setCity("");
+        customer.setAddress(customerAddress.getText().toString().trim());
+        customer.setCity(customerCity.getText().toString().trim());
         customer.setKycDone("no");
         customer.setWalletAmmount(200);
-        customer.setState("");
-        customer.setPincode(121212);
+        customer.setState(customerState.getText().toString().trim());
+        customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
