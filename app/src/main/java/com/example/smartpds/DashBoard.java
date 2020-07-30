@@ -27,7 +27,6 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.smartpds.orderview.DisplayOrdersActivity;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -308,11 +307,22 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
             case R.id.exit:
                 // Green item was selected
                 return true;
-            case R.id.nav_profile:
-                Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.nav_wallet:
-                Toast.makeText(this, "Wallet Clicked", Toast.LENGTH_SHORT).show();
+                Intent walletIntent = new Intent(getApplicationContext(), CustomerWalletTransaction.class);
+                walletIntent.putExtra("mobile", mobile);
+                startActivity(walletIntent);
+                break;
+            case R.id.nav_benificiary:
+                Intent benificiaryintent = new Intent(DashBoard.this, BeneficiaryActivity.class);
+                benificiaryintent.putExtra("mobile", mobile);
+                startActivity(benificiaryintent);
+                break;
+
+            case R.id.nav_orders:
+                Toast.makeText(DashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
+                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+                showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
+                startActivity(showOrders);
                 break;
 
             default:
@@ -338,11 +348,19 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
             // Handle the camera action
             Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_wallet) {
-            Toast.makeText(this, "Wallet Clicked", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_govtschemes) {
-            Toast.makeText(this, "Govt Schemes Clicked", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_help) {
-            Toast.makeText(this, "Help Clicked", Toast.LENGTH_SHORT).show();
+            Intent walletIntent = new Intent(getApplicationContext(), CustomerWalletTransaction.class);
+            walletIntent.putExtra("mobile", mobile);
+            startActivity(walletIntent);
+        } else if (id == R.id.nav_benificiary) {
+            Intent benificiaryintent = new Intent(DashBoard.this, BeneficiaryActivity.class);
+            benificiaryintent.putExtra("mobile", mobile);
+            startActivity(benificiaryintent);
+        } else if (id == R.id.nav_orders) {
+
+            Toast.makeText(DashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
+            Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+            showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
+            startActivity(showOrders);
         } else if (id == R.id.nav_aboutus) {
             Toast.makeText(this, "AboutUs Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_app_setting) {

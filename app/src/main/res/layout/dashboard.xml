@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         app:headerLayout="@layout/customer_header"
-        app:menu="@menu/main_menu" />
+        app:menu="@menu/consumer_menu" />
 
 
 

@@ -299,23 +299,31 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 Toast.makeText(DistributorDashBoard.this, "Home Click", Toast.LENGTH_SHORT).show();
 
                 break;
-            case R.id.profile:
-                Toast.makeText(DistributorDashBoard.this, "profile Click", Toast.LENGTH_SHORT).show();
+            case R.id.nav_wallet:
 
+                Intent walletIntent = new Intent(DistributorDashBoard.this, DistributorWalletTransaction.class);
+                walletIntent.putExtra("mobile", mobile);
+                startActivity(walletIntent);
                 break;
-            case R.id.nav_buy:
+            case R.id.nav_Quata:
 
-                Intent intent = new Intent(DistributorDashBoard.this, DistributorWalletTransaction.class);
-                intent.putExtra("mobile", mobile);
-                startActivity(intent);
+                Intent quotaIntent = new Intent(DistributorDashBoard.this, DistributorWalletTransaction.class);
+                quotaIntent.putExtra("mobile", mobile);
+                startActivity(quotaIntent);
 
                 Toast.makeText(DistributorDashBoard.this, "Wallet : " + walletAmount, Toast.LENGTH_SHORT).show();
 
 
                 break;
-            case R.id.nav_faq:
-                Toast.makeText(DistributorDashBoard.this, "FAQ Click", Toast.LENGTH_SHORT).show();
+            case R.id.nav_orders:
+
+                Toast.makeText(DistributorDashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
+                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+                showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
+                startActivity(showOrders);
+
                 break;
+
             case R.id.nav_login:
                 menu.findItem(R.id.nav_logout).setVisible(true);
                 menu.findItem(R.id.nav_profile).setVisible(true);
@@ -325,7 +333,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 SharedPreferences.Editor editor = pref.edit();
                 editor.clear();
                 editor.commit();
-                intent = new Intent(DistributorDashBoard.this, UserLogin.class);
+                Intent intent = new Intent(DistributorDashBoard.this, UserLogin.class);
                 startActivity(intent);
 
                 break;

@@ -13,9 +13,9 @@
             android:title="Wallet" />
 
         <item
-            android:id="@+id/nav_Quata"
+            android:id="@+id/nav_benificiary"
             android:icon="@drawable/digiration"
-            android:title="Quota" />
+            android:title="Benificiary" />
 
         <item
             android:id="@+id/nav_orders"
