@@ -56,7 +56,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     private EditText editText;
     private Button signIn;
     TextView otpText;
-    String phonenumber, userType, mobileNo, key,isDistributor;
+    String phonenumber, userType, mobileNo, key,isDistributor , distributerOrderId;
     int totalAmount;
     int newPrice = 0;
     RatingBar shopRating;
@@ -75,6 +75,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
         setContentView(R.layout.activity_verify_phone);
         userType = getIntent().getStringExtra("usertype");
         key = getIntent().getStringExtra("key");
+        distributerOrderId = getIntent().getStringExtra("Distributerkey");
         mAuth = FirebaseAuth.getInstance();
         signIn = findViewById(R.id.buttonsignin);
 
@@ -120,7 +121,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 //
 //                        if (status) {
 
-                          
+
                             placeOrder(code);
 //
 //
@@ -189,6 +190,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
     private void placeOrder(String code) {
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Orders/" + mobileNo);
+        final DatabaseReference distributerOrdersRef = FirebaseDatabase.getInstance().getReference("Orders/" + distributorMobileNo);
         final DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart/" + mobileNo);
         final DatabaseReference customerWallet = FirebaseDatabase.getInstance().getReference("Customers/" + mobileNo).child("walletAmmount");
         final DatabaseReference distributorWallet = FirebaseDatabase.getInstance().getReference("Distributors/" + distributorMobileNo).child("walletAmmount");
@@ -234,6 +236,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                                 distributorWallet.setValue(newPrice).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
+                                        distributerOrdersRef.child(distributerOrderId).child("orderPlaced").setValue("yes");
                                         rootRef.child(key).child("orderPlaced").setValue("yes").addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {

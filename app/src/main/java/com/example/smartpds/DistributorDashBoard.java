@@ -23,6 +23,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.smartpds.orderview.DisplayOrdersActivity;
 import com.example.smartpds.recyclerex.product.ProductActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +44,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     Menu menu;
     String email, name, qrlink;
     long walletAmount;
-    CardView walletCard, shopCard, showQR, showQuota;
+    CardView walletCard, shopCard, showQR, showQuota , showOrders;
     Button qrgenerate;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
     ImageView dialog,distributorPicture;
@@ -53,7 +54,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
     SharedPreferences pref;
-
+    private static final String CUSTOMER_MOBILE_NUMBER = "customerMobileNumber";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +101,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         ImageView menuIcon = (ImageView) findViewById(R.id.menu_icon);
         qrgenerate = (Button) findViewById(R.id.generateqr);
         showQR = findViewById(R.id.showqr);
+        showOrders= findViewById(R.id.orders);
         distributorName = mNavigationView.getHeaderView(0).findViewById(R.id.distributor_name);
         distributorEmail = mNavigationView.getHeaderView(0).findViewById(R.id.distributormail);
         distributorPicture=mNavigationView.getHeaderView(0).findViewById(R.id.distributor_pic);
@@ -140,6 +142,18 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        showOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(DistributorDashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
+                Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
+                showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
+                startActivity(showOrders);
+
             }
         });
 

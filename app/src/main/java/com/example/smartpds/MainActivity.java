@@ -1,7 +1,6 @@
 package com.example.smartpds;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -48,7 +47,7 @@ String userType;
 
                 String phoneNumber = "+" +code+ number;
                 Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, DashBoard.class);
+                Intent intent = new Intent(MainActivity.this, DistributorDashBoard.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);
