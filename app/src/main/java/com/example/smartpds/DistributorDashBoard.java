@@ -3,6 +3,7 @@ package com.example.smartpds;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
@@ -51,12 +52,13 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.distributordashboard);
-
+        pref = getSharedPreferences("user_details",MODE_PRIVATE);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.distributor_drawer_layout);
         navigationView = findViewById(R.id.distributor_nav_view);
@@ -86,6 +88,11 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         mNavigationView = (NavigationView) findViewById(R.id.distributor_nav_view);
 
         mobile = getIntent().getStringExtra("mobile");
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("username",mobile);
+        editor.putString("usertype","distributor");
+        editor.commit();
+        Toast.makeText(this, "Session Started", Toast.LENGTH_SHORT).show();
         mDatabase = FirebaseDatabase.getInstance().getReference("Distributors").child(mobile);
         mDatabaseKyc = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(mobile);
 
