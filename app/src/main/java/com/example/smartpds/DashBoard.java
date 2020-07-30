@@ -161,12 +161,12 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         String str4 = path4.toString();
         String str5 = path5.toString();
         String str6 = path6.toString();
-        Hash_file_maps.put("Shivkumar", str1);
-        Hash_file_maps.put("Aditya", str2);
-        Hash_file_maps.put("Vishal", str3);
-        Hash_file_maps.put("Pooja", str4);
-        Hash_file_maps.put("Vasanta", str5);
-        Hash_file_maps.put("Raj", str6);
+        Hash_file_maps.put("One Nation One Ration", str1);
+        Hash_file_maps.put("One Nation One Card", str2);
+        Hash_file_maps.put("Ration Card India", str3);
+        Hash_file_maps.put("एक राष्ट्र एक राशन", str4);
+        Hash_file_maps.put("डिजिटल इंडिया का डिजिटल राशन", str5);
+        Hash_file_maps.put("Digital Ration Khata", str6);
 
 
         for (String name : Hash_file_maps.keySet()) {
