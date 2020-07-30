@@ -201,6 +201,14 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
                 startActivity(intent);
             }
         });
+        walletCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent showOrders = new Intent(getApplicationContext(), CustomerWalletTransaction.class);
+                showOrders.putExtra("mobile", mobile);
+                startActivity(showOrders);
+            }
+        });
 
         allOrders.setOnClickListener(new View.OnClickListener() {
             @Override

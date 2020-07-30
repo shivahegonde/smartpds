@@ -60,6 +60,7 @@
         <activity android:name=".shop.CartActivity" />
         <activity android:name=".DashBoard" />
         <activity android:name=".DistributorWalletTransaction" />
+        <activity android:name=".CustomerWalletTransaction" />
         <activity android:name=".DistributorDashBoard" />
         <activity android:name=".QRGeneration" />
         <activity android:name=".Logout" />
