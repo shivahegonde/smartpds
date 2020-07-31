@@ -429,7 +429,12 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
             editor.commit();
             Intent intent = new Intent(DashBoard.this, UserLogin.class);
             startActivity(intent);
-        } else if (id == R.id.nav_app_setting) {
+        }  else if (id == R.id.nav_kyc) {
+            Intent kyc = new Intent(DashBoard.this, CustomerKycRegister.class);
+            kyc.putExtra("mobile", mobile);
+            startActivity(kyc);
+        }
+        else if (id == R.id.nav_app_setting) {
 
         } else if (id == R.id.nav_notification_setting) {
 

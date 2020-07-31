@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_Quata"
             android:icon="@drawable/quota"
-            android:title="Quota" />
+            android:title="Upload KYC" />
 
         <item
             android:id="@+id/nav_orders"

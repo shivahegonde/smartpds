@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,11 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.smartpds.orderview.DisplayOrdersActivity;
 import com.example.smartpds.orderview.DisplayOrdersActivityForDistributor;
 import com.example.smartpds.utils.CheckPermissions;
@@ -38,10 +44,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.HashMap;
 
-public class DistributorDashBoard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DistributorDashBoard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
-
+    SliderLayout sliderLayout;
+    HashMap<String, String> Hash_file_maps;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     // Toolbar toolbar;
@@ -118,6 +126,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
             }
         });
 
+
         qrgenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +134,48 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 startActivity(intent);
             }
         });
+        //Slider Code
 
+        Hash_file_maps = new HashMap<String, String>();
+        sliderLayout = (SliderLayout) findViewById(R.id.slider);
+        Uri path1 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationone);
+        Uri path2 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationtwo);
+        Uri path3 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationthree);
+        Uri path4 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationfour);
+        Uri path5 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationfive);
+        Uri path6 = Uri.parse("android.resource://com.example.smartpds/" + R.drawable.rationsix);
+        String str1 = path1.toString();
+        String str2 = path2.toString();
+        String str3 = path3.toString();
+        String str4 = path4.toString();
+        String str5 = path5.toString();
+        String str6 = path6.toString();
+        Hash_file_maps.put("One Nation One Ration", str1);
+        Hash_file_maps.put("One Nation One Card", str2);
+        Hash_file_maps.put("Ration Card India", str3);
+        Hash_file_maps.put("एक राष्ट्र एक राशन", str4);
+        Hash_file_maps.put("डिजिटल इंडिया का डिजिटल राशन", str5);
+        Hash_file_maps.put("Digital Ration Khata", str6);
+
+
+        for (String name : Hash_file_maps.keySet()) {
+
+            TextSliderView textSliderView = new TextSliderView(DistributorDashBoard.this);
+            textSliderView
+                    .description(name)
+                    .image(Hash_file_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra", name);
+            sliderLayout.addSlider(textSliderView);
+        }
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        sliderLayout.setDuration(3000);
+        sliderLayout.addOnPageChangeListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
         walletCard = findViewById(R.id.bankCard);
 //        showQuota = findViewById(R.id.quotashow);
@@ -317,6 +367,11 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         dialog.show();
 
     }
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+
+        Toast.makeText(this, slider.getBundle().get("extra") + " " + "   " + Hash_file_maps.get("Shivkumar"), Toast.LENGTH_SHORT).show();
+    }
 
 
     @Override
@@ -371,7 +426,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 break;
             case R.id.nav_Quata:
 
-                Intent quotaIntent = new Intent(DistributorDashBoard.this, DistributorWalletTransaction.class);
+                Intent quotaIntent = new Intent(DistributorDashBoard.this, DistributorKycRegister.class);
                 quotaIntent.putExtra("mobile", mobile);
                 startActivity(quotaIntent);
 
@@ -411,5 +466,20 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
