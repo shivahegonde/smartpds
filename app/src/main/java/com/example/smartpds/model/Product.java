@@ -2,7 +2,7 @@ package com.example.smartpds.model;
 
 public class Product {
 
-    String  price;
+    long  price;
     String  quanity;
     String cartUserQuntity;
     String productImage;
@@ -36,21 +36,21 @@ public class Product {
         this.quanity = quanity;
     }
 
-    public String getPrice() {
+    public long getPrice() {
         return price;
     }
     public String getProductImage() {
         return productImage;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(long price) {
         this.price = price;
     }
     public void setProductImage(String image) {
         this.productImage = image;
     }
 
-    public Product(String price, String quanity) {
+    public Product(long price, String quanity) {
         this.price = price;
         this.quanity = quanity;
     }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartpds.model.Distributer;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -50,7 +51,7 @@ static int count=0;
 DatabaseReference  databaseReference;
     private StorageReference storageReference;
     QRGEncoder qrgEncoder;
-Distributor distributor;
+Distributer distributor;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
     Bitmap bitmap;
     String mobile;
@@ -74,7 +75,7 @@ Distributor distributor;
         registerButton=findViewById(R.id.register);
 
         databaseReference= FirebaseDatabase.getInstance().getReference("Distributors");
-        distributor =new Distributor();
+        distributor =new Distributer();
 
 
     }

@@ -73,14 +73,14 @@ public class CartActivity extends AppCompatActivity {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    String price = snapshot.child("price").getValue(String.class);
+                    long price = snapshot.child("price").getValue(long.class);
                     String qty = snapshot.child("quanity").getValue(String.class);
                     //    Product model = new Product(price , qty);
                     //   model.setPrice(price);
                     // model.setQuanity(qty);
 
-                    if (price != null) {
-                        int modelPricce = Integer.parseInt(price);
+                    if (price != 0) {
+                        long modelPricce = price;
                         totalPriceOfCart += modelPricce;
                     }
 

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartpds.Distributor;
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.ProductItemAdapter;
 import com.example.smartpds.model.Cart;
@@ -89,7 +90,7 @@ public class DistributerShop extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
                 {
-                    Distributer shop = dataSnapshot.getValue(Distributer.class);
+                    Distributor shop = dataSnapshot.getValue(Distributor.class);
 
 //                    strdistributerName=shop.getFname()+
 //                            shop.getLname();
@@ -209,7 +210,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
             String newQuantity = String.valueOf(newQuantity1);
             product.setCartUserQuntity(newQuantity);
             v.setText(newQuantity);
-            int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(product.getPrice());
+            int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(String.valueOf(product.getPrice()));
             String newPrice = String.valueOf(price);
 
             documentReference.child(productName).child("quanity").setValue(newQuantity);
@@ -234,7 +235,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
                     String newQuantity = String.valueOf(newQuantity1);
                     product.setCartUserQuntity(newQuantity);
                     v.setText(newQuantity);
-                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(product.getPrice());
+                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(String.valueOf(product.getPrice()));
                     String newPrice = String.valueOf(price);
                     documentReference.child(productName).child("quanity").setValue(newQuantity);
                     documentReference.child(productName).child("price").setValue(newPrice);

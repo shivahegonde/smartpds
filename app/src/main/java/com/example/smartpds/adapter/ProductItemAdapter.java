@@ -111,7 +111,7 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
             Log.d("OnBind", productId);
             //holder.mimageView.setImageResource(currentItem.getmImageResource());
             holder.mtextView1.setText(productId);
-            holder.mtextView2.setText(model.getPrice());
+            holder.mtextView2.setText(""+model.getPrice());
 
             db = FirebaseDatabase.getInstance();
             documentReference = db.getReference("Cart/" + mobile).child(productId);
@@ -138,7 +138,7 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
                         else if(productId.equalsIgnoreCase("rice")){
                             holder.mimageView.setImageResource(R.drawable.rice);
                         }
-                        int price = Integer.parseInt(model.getPrice()) * Integer.parseInt(quantity);
+                        int price = Integer.parseInt(""+model.getPrice()) * Integer.parseInt(quantity);
                         String newPrice = String.valueOf(price);
                         model.setCartPriceQuantity(newPrice);
                     } else {
