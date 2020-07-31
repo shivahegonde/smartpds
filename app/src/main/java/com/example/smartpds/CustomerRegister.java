@@ -98,21 +98,14 @@ String name;
         customer.setState(customerState.getText().toString().trim());
         customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 databaseReference.child(mobile).setValue(customer);
                 generateDistributorQR();
                 Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
                 intent.putExtra("mobile",mobile);
                 startActivity(intent);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
     }
     private void generateDistributorQR() {
         while(count!=1) {
@@ -153,7 +146,7 @@ String name;
                         .startDownload(new DownloadListener() {
                             @Override
                             public void onDownloadComplete() {
-                                Toast.makeText(CustomerRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerRegister.this, "QR DownLoad Complete", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
