@@ -55,7 +55,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     // Toolbar toolbar;
     Menu menu;
     String email, name, qrlink;
-    long walletAmount;
+    long walletAmount=1;
     CardView walletCard, shopCard, showQR, showQuota , showOrders;
     Button qrgenerate;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
@@ -246,7 +246,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 email = dataSnapshot.child("email").getValue(String.class);
                 name = dataSnapshot.child("shopname").getValue(String.class);
-                walletAmount = dataSnapshot.child("walletAmmount").getValue(long.class);
+//                walletAmount = dataSnapshot.child("walletAmmount").getValue(long.class);
 
                 distributorEmail.setText(email);
                 distributorName.setText(name);
@@ -370,7 +370,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     @Override
     public void onSliderClick(BaseSliderView slider) {
 
-        Toast.makeText(this, slider.getBundle().get("extra") + " " + "   " + Hash_file_maps.get("Shivkumar"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, ""+slider.getBundle().get("extra") , Toast.LENGTH_SHORT).show();
     }
 
 
@@ -430,7 +430,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
                 quotaIntent.putExtra("mobile", mobile);
                 startActivity(quotaIntent);
 
-                Toast.makeText(DistributorDashBoard.this, "Wallet : " + walletAmount, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(DistributorDashBoard.this, "Wallet : " + walletAmount, Toast.LENGTH_SHORT).show();
 
 
                 break;
