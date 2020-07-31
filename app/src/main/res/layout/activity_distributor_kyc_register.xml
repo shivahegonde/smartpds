@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:background="@drawable/newupload"
-            android:text="        Select Shop Licence" />
+            android:text="          Choose Shop Licence" />
 
         <Button
             android:id="@+id/shopupload"

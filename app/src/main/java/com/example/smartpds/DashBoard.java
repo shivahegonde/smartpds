@@ -374,6 +374,12 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
                 startActivity(benificiaryintent);
                 break;
 
+            case R.id.nav_kyc:
+                Intent kyc = new Intent(DashBoard.this, CustomerKycRegister.class);
+                kyc.putExtra("mobile", mobile);
+                startActivity(kyc);
+                break;
+
             case R.id.nav_orders:
                 Toast.makeText(DashBoard.this, "All Orders", Toast.LENGTH_SHORT).show();
                 Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);

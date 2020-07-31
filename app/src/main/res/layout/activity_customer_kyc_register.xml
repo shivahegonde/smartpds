@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:background="@drawable/newupload"
-            android:text="Choose Pan Card" />
+            android:text="        Choose Ration Card" />
 
         <Button
             android:id="@+id/buttonUploadPan"
