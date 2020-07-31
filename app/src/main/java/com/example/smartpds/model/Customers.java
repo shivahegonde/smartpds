@@ -8,7 +8,7 @@ public class Customers {
     String fname;
     String  kycDone;
     String lname;
-    String mobile;
+    long mobile;
     long pincode;
     String shopname;
     String state;
@@ -61,11 +61,11 @@ public class Customers {
         this.lname = lname;
     }
 
-    public String getMobile() {
+    public long getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public void setMobile(long mobile) {
         this.mobile = mobile;
     }
 
@@ -104,7 +104,7 @@ public class Customers {
     public Customers() {
     }
 
-    public Customers(String accountStatus, String address, String city, String email, String fname, String kycDone, String lname, String mobile, long pincode, String shopname, String state, long walletAmmount) {
+    public Customers(String accountStatus, String address, String city, String email, String fname, String kycDone, String lname, long mobile, long pincode, String shopname, String state, long walletAmmount) {
         this.accountStatus = accountStatus;
         this.address = address;
         this.city = city;

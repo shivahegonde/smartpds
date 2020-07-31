@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
+import com.example.smartpds.model.Customers;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +56,7 @@ Button registerButton;
     String mobile;
     String TAG = "GenerateQRCode";
 DatabaseReference databaseReference;
-Customer customer;
+Customers customer;
     File file;
     String dirPath, fileName;
 String name;
@@ -77,13 +78,13 @@ String name;
         databaseReference= FirebaseDatabase.getInstance().getReference("Customers");
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
         storageReference = FirebaseStorage.getInstance().getReference();
-        customer=new Customer();
+        customer=new Customers();
 
     }
     public void insert(View view){
         customer.setFname(firstName.getText().toString().trim());
         customer.setLname(lastName.getText().toString().trim());
-        customer.setMobile(mobileNo.getText().toString().trim());
+        customer.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
         customer.setEmail(emailId.getText().toString().trim());
         name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
         final String mobile=mobileNo.getText().toString().trim();
