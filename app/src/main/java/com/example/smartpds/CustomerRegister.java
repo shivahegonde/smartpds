@@ -22,6 +22,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartpds.utils.DownloadQrBAckground;
+import com.example.smartpds.utils.onDownloadListner;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -108,10 +110,12 @@ String name;
         });
     }
     private void generateDistributorQR() {
+
+        Toast.makeText(getApplicationContext(), "Qr generating ..", Toast.LENGTH_LONG).show();
         while(count!=1) {
             final StorageReference sRef = storageReference.child("Customers/" + mobileNo.getText() + "/" +"QRCode/"+ name + ".jpg");
-            boolean save;
-            String result;
+
+
             Toast.makeText(this, "Image QR Path   " + savePath + name + ".jpg", Toast.LENGTH_SHORT).show();
             try {
 
@@ -135,57 +139,73 @@ String name;
                     Log.v(TAG, e.toString());
                 }
 
-                ///
-                Bitmap background = BitmapFactory.decodeFile(savePath + "ration.jpg");
+
+                String  qrlink = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
+                new DownloadQrBAckground(qrlink, "ration", getApplicationContext(), new onDownloadListner() {
+                    @Override
+                    public void onDownload(String savePath) {
+                        ///
+                Bitmap background = BitmapFactory.decodeFile(savePath);
                 Bitmap newbitmap = combineImages(background, bitmap);
                 Constants.name = name;
-                save = QRGSaver.save(savePath, name, newbitmap, QRGContents.ImageType.IMAGE_JPEG);
-                result = save ? "Image Saved" : "Image Not Saved";
-                Toast.makeText(getApplicationContext(), result + " at " + savePath, Toast.LENGTH_LONG).show();
-                final ProgressDialog progressDialog = new ProgressDialog(this);
-                progressDialog.setTitle("Generating QR");
-                progressDialog.show();
-                File imgFile = new File(savePath + name + ".jpg");
-                /////////////////////////////////
+                        try {
+                            boolean save;
+                            String result;
+                            save = QRGSaver.save(savePath, name, newbitmap, QRGContents.ImageType.IMAGE_JPEG);
+                            result = save ? "Image Saved" : "Image Not Saved";
+                            Toast.makeText(getApplicationContext(), result + " at " + savePath, Toast.LENGTH_LONG).show();
+                            final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
+                            progressDialog.setTitle("Generating QR");
+                            progressDialog.show();
 
-                sRef.putFile(Uri.fromFile(imgFile))
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                //dismissing the progress dialog
-                                progressDialog.dismiss();
-                                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!urlTask.isSuccessful()) ;
-                                Uri downloadUrl = urlTask.getResult();
-                                //displaying success toast
-                                Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            File imgFile = new File(savePath );
+                            /////////////////////////////////
 
-                                //creating the upload object to store uploaded image details
+                            sRef.putFile(Uri.fromFile(imgFile))
+                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            //dismissing the progress dialog
+                                            progressDialog.dismiss();
+                                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                            while (!urlTask.isSuccessful()) ;
+                                            Uri downloadUrl = urlTask.getResult();
+                                            //displaying success toast
+                                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+
+                                            //creating the upload object to store uploaded image details
 //                                databaseReference.child(mobile).child("qrcodelink").setValue(downloadUrl.toString());
-                                //adding an upload to firebase database
+                                            //adding an upload to firebase database
 
-                                mDatabase.child("qrlink").setValue(downloadUrl.toString());
+                                            mDatabase.child("qrlink").setValue(downloadUrl.toString());
 
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                //displaying the upload progress
-                                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                                progressDialog.setMessage("Generated QR " + ((int) progress) + "%...");
-                            }
-                        });
-                count++;
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                            //displaying the upload progress
+                                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                            progressDialog.setMessage("Generated QR " + ((int) progress) + "%...");
+                                        }
+                                    });
+                            count++;
+
+
+                        } catch (WriterException e) {
+                            e.printStackTrace();
+                        }
 
                 ////////////////////////////////////
+                    }
+                }).execute() ;
 
 
             } catch (Exception e) {

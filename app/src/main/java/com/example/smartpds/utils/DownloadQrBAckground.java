@@ -1,15 +1,10 @@
-package com.example.smartpds;
-/*
- * Copyright (c) 2020. Created By Raj Patil
- */
-
+package com.example.smartpds.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,19 +13,19 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-public  class DownloadQr extends AsyncTask<Object, Object, Object> {
+public  class DownloadQrBAckground extends AsyncTask<Object, Object, Object> {
     private static Context mContext;
     private String requestUrl, imagename_;
-    private ImageView view;
     private Bitmap bitmap;
     private FileOutputStream fos;
+    onDownloadListner onDownloadListner;
 
 
-    public DownloadQr(String requestUrl, ImageView view , String _imagename_ , Context context) {
+    public DownloadQrBAckground(String requestUrl , String _imagename_ , Context context , onDownloadListner onDownloadListner) {
         this.requestUrl = requestUrl;
-        this.view = view;
         this.imagename_ = _imagename_;
         mContext = context;
+        this.onDownloadListner =onDownloadListner;
 
     }
 
@@ -77,7 +72,7 @@ public  class DownloadQr extends AsyncTask<Object, Object, Object> {
 
 
 
-    static String saveQr(Bitmap bitmap, String imagename_) {
+    String saveQr(Bitmap bitmap, String imagename_) {
 
 
         String stored = null;
@@ -93,7 +88,7 @@ public  class DownloadQr extends AsyncTask<Object, Object, Object> {
             out.flush();
             out.close();
             stored = "success";
-
+                this.onDownloadListner.onDownload(filename);
             Toast.makeText(mContext , "QR Download at : " + filename , Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
