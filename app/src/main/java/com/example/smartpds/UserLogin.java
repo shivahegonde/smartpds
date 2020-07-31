@@ -4,15 +4,12 @@ package com.example.smartpds;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class UserLogin extends AppCompatActivity {
 
@@ -74,4 +71,32 @@ Intent intent;
         });
 
     }
+
+
+
+    boolean doubleBackToExitPressedOnce = false;
+    @Override
+    public void onBackPressed() {
+
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                finishAffinity();
+                finish();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
+        }
+
+//        super.onBackPressed();
+
 }

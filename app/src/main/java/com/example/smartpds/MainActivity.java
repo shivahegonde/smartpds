@@ -1,6 +1,7 @@
 package com.example.smartpds;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartpds.utils.CheckPermissions;
 import com.google.firebase.database.ServerValue;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +31,16 @@ String userType;
 
 
 
+        if (CheckPermissions.checkWriteExternalPermission(getApplicationContext() ,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102);
+            }
+
+        }
+
 
         editText = findViewById(R.id.edittextphone);
 
@@ -47,7 +59,7 @@ String userType;
 
                 String phoneNumber = "+" +code+ number;
                 Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, VerifyPhoneActivity.class);
+                Intent intent = new Intent(MainActivity.this, DashBoard.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);

@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
+
         tools:openDrawer="start">
 
 
@@ -15,6 +16,7 @@
         android:layout_gravity="start"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
+
         app:headerLayout="@layout/customer_header"
         app:menu="@menu/consumer_menu" />
 

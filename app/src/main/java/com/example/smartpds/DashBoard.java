@@ -1,9 +1,12 @@
 package com.example.smartpds;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -27,6 +30,7 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.smartpds.orderview.DisplayOrdersActivity;
+import com.example.smartpds.utils.CheckPermissions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -64,7 +68,17 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         drawerLayout = (DrawerLayout) findViewById(R.id.user_drawer_layout);
         navigationView = findViewById(R.id.user_nav_view);
         navigationView.bringToFront();
-        pref = getSharedPreferences("user_details",MODE_PRIVATE);
+        pref = getSharedPreferences("user_details", MODE_PRIVATE);
+
+
+        if (pref.contains("username") && pref.contains("usertype"))
+        {
+
+        }
+        else {
+            Intent intent = new Intent(DashBoard.this, UserLogin.class);
+            startActivity(intent);
+        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
                 (
@@ -115,6 +129,16 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
 
             }
         });
+
+
+        if (CheckPermissions.checkWriteExternalPermission(getApplicationContext() ,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102);
+            }
+
+        }
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -230,9 +254,21 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         shopCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DashBoard.this, DistributorQRScanner.class);
-                intent.putExtra("customermobile", mobile);
-                startActivity(intent);
+
+                if (CheckPermissions.checkWriteExternalPermission(getApplicationContext() , android.Manifest.permission.CAMERA)) {
+
+                    Intent intent = new Intent(DashBoard.this, DistributorQRScanner.class);
+                    intent.putExtra("customermobile", mobile);
+                    startActivity(intent);
+                }
+                else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
+                    }
+
+                }
+
+
             }
         });
     }
@@ -269,16 +305,36 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.user_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+
+
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce=false;
+                    }
+                }, 2000);
+            }
+
+//        super.onBackPressed();
         }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -361,8 +417,12 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
             Intent showOrders = new Intent(getApplicationContext(), DisplayOrdersActivity.class);
             showOrders.putExtra(CUSTOMER_MOBILE_NUMBER, mobile);
             startActivity(showOrders);
-        } else if (id == R.id.nav_aboutus) {
-            Toast.makeText(this, "AboutUs Clicked", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_login) {
+            SharedPreferences.Editor editor = pref.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(DashBoard.this, UserLogin.class);
+            startActivity(intent);
         } else if (id == R.id.nav_app_setting) {
 
         } else if (id == R.id.nav_notification_setting) {
@@ -373,4 +433,8 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
 }
