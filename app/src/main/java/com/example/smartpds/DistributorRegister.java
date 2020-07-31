@@ -29,11 +29,8 @@ import com.example.smartpds.model.Distributer;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -104,7 +101,9 @@ Distributer distributor;
         distributor.setPincode(Integer.parseInt(distributorPincode.getText().toString().trim()));
         distributor.setShopImage("https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/uploads%2Fdigirationshop.png?alt=media&token=08517b1d-3ff5-4c0d-a86b-0c9250341e9e");
         mobile=mobileNo.getText().toString().trim();
-
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 databaseReference.child(mobileNo.getText().toString().trim()).setValue(distributor);
                 Toast.makeText(DistributorRegister.this, "Added into Distributors", Toast.LENGTH_SHORT).show();
 
@@ -116,7 +115,13 @@ Distributer distributor;
                 Intent intent = new Intent(DistributorRegister.this, DistributorKycRegister.class);
                 intent.putExtra("mobile", "" + mobileNo.getText());
                 startActivity(intent);
-
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
 
@@ -160,7 +165,7 @@ Distributer distributor;
                         .startDownload(new DownloadListener() {
                             @Override
                             public void onDownloadComplete() {
-                                Toast.makeText(DistributorRegister.this, "QR DownLoad Complete", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DistributorRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

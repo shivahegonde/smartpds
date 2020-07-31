@@ -25,14 +25,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
+import com.example.smartpds.model.Customers;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -58,7 +56,7 @@ Button registerButton;
     String mobile;
     String TAG = "GenerateQRCode";
 DatabaseReference databaseReference;
-Customer customer;
+Customers customer;
     File file;
     String dirPath, fileName;
 String name;
@@ -80,13 +78,13 @@ String name;
         databaseReference= FirebaseDatabase.getInstance().getReference("Customers");
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
         storageReference = FirebaseStorage.getInstance().getReference();
-        customer=new Customer();
+        customer=new Customers();
 
     }
     public void insert(View view){
         customer.setFname(firstName.getText().toString().trim());
         customer.setLname(lastName.getText().toString().trim());
-        customer.setMobile(mobileNo.getText().toString().trim());
+        customer.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
         customer.setEmail(emailId.getText().toString().trim());
         name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
         final String mobile=mobileNo.getText().toString().trim();
@@ -98,14 +96,21 @@ String name;
         customer.setState(customerState.getText().toString().trim());
         customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 
-
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 databaseReference.child(mobile).setValue(customer);
                 generateDistributorQR();
                 Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
                 intent.putExtra("mobile",mobile);
                 startActivity(intent);
-
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
     private void generateDistributorQR() {
         while(count!=1) {
@@ -146,7 +151,7 @@ String name;
                         .startDownload(new DownloadListener() {
                             @Override
                             public void onDownloadComplete() {
-                                Toast.makeText(CustomerRegister.this, "QR DownLoad Complete", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

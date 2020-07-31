@@ -99,7 +99,7 @@
     <Button
         android:layout_marginTop="15dp"
         android:id="@+id/register"
-
+        android:onClick="insert"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:text="Register"
