@@ -6,7 +6,7 @@ public class Distributer {
     String city;
     String  email;
     String fname;
-    boolean  kycDone;
+    String  kycDone;
     String  lname;
     long mobile;
     long pincode;
@@ -55,11 +55,11 @@ public class Distributer {
         this.email = email;
     }
 
-    public boolean getKycDone() {
+    public String getKycDone() {
         return kycDone;
     }
 
-    public void setKycDone(boolean kycDone) {
+    public void setKycDone(String kycDone) {
         this.kycDone = kycDone;
     }
 
@@ -114,7 +114,7 @@ public class Distributer {
     public Distributer() {
     }
 
-    public Distributer(boolean accountStatus, String address, String city, String email, String fname, boolean kycDone, String lname, long mobile, long pincode, String shopname, String state, long walletAmmount) {
+    public Distributer(boolean accountStatus, String address, String city, String email, String fname, String kycDone, String lname, long mobile, long pincode, String shopname, String state, long walletAmmount) {
         this.accountStatus = accountStatus;
         this.address = address;
         this.city = city;
