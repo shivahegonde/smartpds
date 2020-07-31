@@ -19,8 +19,7 @@ public class DistributorWalletTransaction extends AppCompatActivity {
     private DatabaseReference mDatabase;
     String email,name,mobile;
     TextView wallet;
-    long walletAmount;
-
+    long walletAmount=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +30,14 @@ public class DistributorWalletTransaction extends AppCompatActivity {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String walletAmount="";
                 email = dataSnapshot.child("email").getValue(String.class);
                 name  = dataSnapshot.child("fname").getValue(String.class);
-                walletAmount=dataSnapshot.child("walletAmmount").getValue(long.class);
-                wallet.setText(""+walletAmount);
+
+                    walletAmount=  dataSnapshot.child("walletAmmount").getValue().toString();
+                    wallet.setText(""+walletAmount);
+
+
 
             }
             @Override
