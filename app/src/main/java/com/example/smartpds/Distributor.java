@@ -21,7 +21,7 @@ public class Distributor {
     int pincode;
     int walletAmmount;
     String kycDone;
-    boolean accountStatus;
+    String accountStatus;
 
     public String getAddress() {
         return address;
@@ -71,11 +71,11 @@ public class Distributor {
         this.kycDone = kycDone;
     }
 
-    public boolean isAccountStatus() {
+    public String isAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(boolean accountStatus) {
+    public void setAccountStatus(String accountStatus) {
         this.accountStatus = accountStatus;
     }
 
