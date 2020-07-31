@@ -1,11 +1,14 @@
 package com.example.smartpds;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.smartpds.orderview.DisplayOrdersActivity;
 import com.example.smartpds.orderview.DisplayOrdersActivityForDistributor;
+import com.example.smartpds.utils.CheckPermissions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -161,11 +165,20 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         shopCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DistributorDashBoard.this, CustomerQRScanner.class);
-                intent.putExtra("distributormobile", mobile);
 
 
-                startActivity(intent);
+                if (CheckPermissions.checkWriteExternalPermission(getApplicationContext() , android.Manifest.permission.CAMERA)) {
+
+                    Intent intent = new Intent(DistributorDashBoard.this, CustomerQRScanner.class);
+                    intent.putExtra("distributormobile", mobile);
+                    startActivity(intent);
+                }
+                else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
+                    }
+
+                }
             }
         });
 //        showQuota.setOnClickListener(new View.OnClickListener() {
@@ -207,14 +220,30 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         });
     }
 
-
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.distributor_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
         }
     }
 
@@ -256,8 +285,22 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         dialogButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DownloadQr(qrlink, myImage,mobile , getApplicationContext() ).execute() ;
-                dialog.dismiss();
+
+
+                if (CheckPermissions.checkWriteExternalPermission(getApplicationContext() ,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                    new DownloadQr(qrlink, myImage,mobile , getApplicationContext() ).execute() ;
+                    dialog.dismiss();
+                }
+                else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102);
+                    }
+
+                }
+
+
+
             }
         });
 
@@ -345,12 +388,16 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
 
                 break;
 
+                ///nav_logic display as Logout label
             case R.id.nav_login:
-                menu.findItem(R.id.nav_logout).setVisible(true);
-                menu.findItem(R.id.nav_profile).setVisible(true);
-                menu.findItem(R.id.nav_login).setVisible(false);
+                SharedPreferences.Editor editor1 = pref.edit();
+                editor1.clear();
+                editor1.commit();
+                Intent intent1 = new Intent(DistributorDashBoard.this, UserLogin.class);
+                startActivity(intent1);
                 break;
             case R.id.nav_logout:
+
                 SharedPreferences.Editor editor = pref.edit();
                 editor.clear();
                 editor.commit();

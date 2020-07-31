@@ -339,7 +339,9 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                             Log.d("TAG", "onDataChange: " + quantity +" productname : "+ productName + " productQuantity : "+ quantity1);
                             assert productName != null;
                             minusQuantity(productName, distributerProduct.child(productName).child("quantity"), quantity1);
-                    }
+                    }else {
+                            cartRef.child("status").removeValue();
+                        }
 
 
                 }
