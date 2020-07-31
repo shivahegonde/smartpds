@@ -102,7 +102,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
     }
 
         holder.mItemName.setText(productId);
-        holder.mItemPrice.setText(model.getPrice().toString());
+        holder.mItemPrice.setText((int) model.getPrice());
         holder.mItemQuantity.setText(model.getQuanity());
     }
 

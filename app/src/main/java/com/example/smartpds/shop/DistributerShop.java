@@ -209,8 +209,8 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
             String newQuantity = String.valueOf(newQuantity1);
             product.setCartUserQuntity(newQuantity);
             v.setText(newQuantity);
-            int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(product.getPrice());
-            String newPrice = String.valueOf(price);
+            int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(String.valueOf(product.getPrice()));
+            long newPrice = price;
 
             documentReference.child(productName).child("quanity").setValue(newQuantity);
             documentReference.child(productName).child("price").setValue(newPrice);
@@ -234,8 +234,8 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
                     String newQuantity = String.valueOf(newQuantity1);
                     product.setCartUserQuntity(newQuantity);
                     v.setText(newQuantity);
-                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(product.getPrice());
-                    String newPrice = String.valueOf(price);
+                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(String.valueOf(product.getPrice()));
+                    long newPrice = price;
                     documentReference.child(productName).child("quanity").setValue(newQuantity);
                     documentReference.child(productName).child("price").setValue(newPrice);
                 }
