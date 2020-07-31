@@ -27,11 +27,8 @@ import com.example.smartpds.utils.onDownloadListner;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -57,6 +54,7 @@ Button registerButton;
 DatabaseReference databaseReference;
 Customer customer;
 String name;
+Button register;
     private StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +70,22 @@ String name;
         customerPincode=findViewById(R.id.pincode);
         customerState=findViewById(R.id.state);
         registerButton=findViewById(R.id.register);
+
+        register = findViewById(R.id.register);
+
         databaseReference= FirebaseDatabase.getInstance().getReference("Customers");
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
         storageReference = FirebaseStorage.getInstance().getReference();
         customer=new Customer();
 
-    }
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insert(view);
+            }
+        });
+
+            }
     public void insert(View view){
         customer.setFname(firstName.getText().toString().trim());
         customer.setLname(lastName.getText().toString().trim());
@@ -93,24 +101,28 @@ String name;
         customer.setState(customerState.getText().toString().trim());
         customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
                 databaseReference.child(mobile).setValue(customer);
                 generateDistributorQR();
                 Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
                 intent.putExtra("mobile",mobile);
                 startActivity(intent);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
     private void generateDistributorQR() {
 
+        Log.d(TAG, "generateDistributorQR: run");
         Toast.makeText(getApplicationContext(), "Qr generating ..", Toast.LENGTH_LONG).show();
         while(count!=1) {
             final StorageReference sRef = storageReference.child("Customers/" + mobileNo.getText() + "/" +"QRCode/"+ name + ".jpg");
@@ -139,16 +151,19 @@ String name;
                     Log.v(TAG, e.toString());
                 }
 
+                Log.d(TAG, "generateDistributorQR: downloadqrlink");
 
                 String  qrlink = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
                 new DownloadQrBAckground(qrlink, "ration", getApplicationContext(), new onDownloadListner() {
                     @Override
                     public void onDownload(String savePath) {
                         ///
+
+                        try {
                 Bitmap background = BitmapFactory.decodeFile(savePath);
                 Bitmap newbitmap = combineImages(background, bitmap);
                 Constants.name = name;
-                        try {
+
                             boolean save;
                             String result;
                             save = QRGSaver.save(savePath, name, newbitmap, QRGContents.ImageType.IMAGE_JPEG);
@@ -196,7 +211,7 @@ String name;
                                             progressDialog.setMessage("Generated QR " + ((int) progress) + "%...");
                                         }
                                     });
-                            count++;
+
 
 
                         } catch (WriterException e) {
@@ -211,6 +226,7 @@ String name;
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            count++;
         }
     }
     public Bitmap combineImages(Bitmap background, Bitmap foreground) {
