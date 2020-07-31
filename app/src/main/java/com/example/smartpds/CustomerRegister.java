@@ -71,7 +71,7 @@ String name;
         customerState=findViewById(R.id.state);
         registerButton=findViewById(R.id.register);
         databaseReference= FirebaseDatabase.getInstance().getReference("Customers");
-        mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(""+mobileNo.getText());
+        mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("CustomerKYC").child(mobile);
         storageReference = FirebaseStorage.getInstance().getReference();
         customer=new Customer();
 
@@ -161,7 +161,7 @@ String name;
                                 Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
 
                                 //creating the upload object to store uploaded image details
-                                databaseReference.child(""+mobileNo.getText()).child("qrcodelink").setValue(downloadUrl.toString());
+//                                databaseReference.child(mobile).child("qrcodelink").setValue(downloadUrl.toString());
                                 //adding an upload to firebase database
 
                                 mDatabase.child("qrlink").setValue(downloadUrl.toString());
