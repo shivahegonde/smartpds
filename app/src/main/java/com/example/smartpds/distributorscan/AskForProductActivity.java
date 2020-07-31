@@ -137,7 +137,7 @@ public class AskForProductActivity extends AppCompatActivity {
                     String newQuantity = String.valueOf(newQuantity1);
                     product.setCartUserQuntity(newQuantity);
                     v.setText(newQuantity);
-                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(product.getPrice());
+                    int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(String.valueOf(product.getPrice()));
                     String newPrice = String.valueOf(price);
                     documentReference.child(productName).child("quanity").setValue(newQuantity);
                     documentReference.child(productName).child("price").setValue(newPrice);

@@ -22,6 +22,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.DownloadListener;
 import com.example.smartpds.model.Distributer;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +60,10 @@ Distributer distributor;
     String mobile;
     private String shopNameString;
     String TAG = "GenerateQRCode";
+    File file;
+    String dirPath, fileName;
+    String name;
+    String url = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +90,7 @@ Distributer distributor;
 
         distributor.setFname(firstName.getText().toString().trim());
         distributor.setLname(lastName.getText().toString().trim());
-        distributor.setMobile(mobileNo.getText().toString().trim());
+        distributor.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
         distributor.setEmail(emailId.getText().toString().trim());
         shopNameString = shopName.getText().toString().trim();
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(""+mobileNo.getText());
@@ -151,6 +158,25 @@ Distributer distributor;
                 }
 
                 ///
+                AndroidNetworking.initialize(getApplicationContext());
+                dirPath = savePath;
+                fileName = "ration.jpg";
+                file = new File(dirPath, fileName);
+
+                AndroidNetworking.download(url, dirPath, fileName)
+                        .build()
+                        .startDownload(new DownloadListener() {
+                            @Override
+                            public void onDownloadComplete() {
+                                Toast.makeText(DistributorRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+
+                            }
+                        });
+
                 Bitmap background = BitmapFactory.decodeFile(savePath + "ration.jpg");
                 Bitmap newbitmap = combineImages(background, bitmap);
                 Constants.name = shopNameString;

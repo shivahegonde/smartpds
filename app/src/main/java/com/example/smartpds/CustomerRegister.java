@@ -22,6 +22,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.DownloadListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -47,6 +50,8 @@ EditText firstName,lastName, mobileNo,emailId,customerAddress,customerCity,custo
 Button registerButton;
     QRGEncoder qrgEncoder;
     private DatabaseReference mDatabase;
+    String url = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
+
     Bitmap bitmap;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
     static int count=0;
@@ -54,6 +59,8 @@ Button registerButton;
     String TAG = "GenerateQRCode";
 DatabaseReference databaseReference;
 Customer customer;
+    File file;
+    String dirPath, fileName;
 String name;
     private StorageReference storageReference;
     @Override
@@ -136,6 +143,25 @@ String name;
                 }
 
                 ///
+                AndroidNetworking.initialize(getApplicationContext());
+                dirPath = savePath;
+                fileName = "ration.jpg";
+                file = new File(dirPath, fileName);
+
+                AndroidNetworking.download(url, dirPath, fileName)
+                        .build()
+                        .startDownload(new DownloadListener() {
+                            @Override
+                            public void onDownloadComplete() {
+                                Toast.makeText(CustomerRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+
+                            }
+                        });
+
                 Bitmap background = BitmapFactory.decodeFile(savePath + "ration.jpg");
                 Bitmap newbitmap = combineImages(background, bitmap);
                 Constants.name = name;
