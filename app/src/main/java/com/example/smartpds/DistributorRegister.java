@@ -87,7 +87,7 @@ Distributor distributor;
         shopNameString = shopName.getText().toString().trim();
         mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(""+mobileNo.getText());
         distributor.setShopname(shopNameString);
-        distributor.setAccountStatus(false);
+        distributor.setAccountStatus("pending");
         distributor.setAddress(distributorAddress.getText().toString().trim());
         distributor.setCity(distributorCity.getText().toString().trim());
         distributor.setKycDone("no");
