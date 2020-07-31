@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartpds.R;
 import com.example.smartpds.model.Product;
-import com.example.smartpds.shop.DistributerShop;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -111,7 +109,8 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
             Log.d("OnBind", productId);
             //holder.mimageView.setImageResource(currentItem.getmImageResource());
             holder.mtextView1.setText(productId);
-            holder.mtextView2.setText(""+model.getPrice());
+            String price = String.valueOf(model.getPrice());
+            holder.mtextView2.setText(price);
 
             db = FirebaseDatabase.getInstance();
             documentReference = db.getReference("Cart/" + mobile).child(productId);
@@ -138,7 +137,7 @@ public class ProductItemAdapter  extends FirebaseRecyclerAdapter<Product, Produc
                         else if(productId.equalsIgnoreCase("rice")){
                             holder.mimageView.setImageResource(R.drawable.rice);
                         }
-                        int price = Integer.parseInt(""+model.getPrice()) * Integer.parseInt(quantity);
+                        int price = Integer.parseInt(String.valueOf(model.getPrice())) * Integer.parseInt(quantity);
                         String newPrice = String.valueOf(price);
                         model.setCartPriceQuantity(newPrice);
                     } else {

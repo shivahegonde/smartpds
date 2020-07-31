@@ -14,8 +14,6 @@ import com.example.smartpds.model.Product;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-import java.util.Objects;
-
 
 public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.CartViewHolder> {
 
@@ -111,7 +109,7 @@ public class CartAdapter extends FirebaseRecyclerAdapter<Product, CartAdapter.Ca
        // holder.mItemIcon.setImageResource(currentItem.getCartItemImg());
 
         holder.mItemName.setText(productId);
-        holder.mItemPrice.setText(""+model.getPrice());
+        holder.mItemPrice.setText(model.getPrice());
         holder.mItemQuantity.setText(model.getQuanity());
     }
 

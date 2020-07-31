@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartpds.Distributor;
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.ProductItemAdapter;
 import com.example.smartpds.model.Cart;
@@ -90,7 +89,7 @@ public class DistributerShop extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
                 {
-                    Distributor shop = dataSnapshot.getValue(Distributor.class);
+                    Distributer shop = dataSnapshot.getValue(Distributer.class);
 
 //                    strdistributerName=shop.getFname()+
 //                            shop.getLname();
@@ -211,7 +210,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
             product.setCartUserQuntity(newQuantity);
             v.setText(newQuantity);
             int price = Integer.parseInt(product.getCartPriceQuantity()) +  Integer.parseInt(String.valueOf(product.getPrice()));
-            String newPrice = String.valueOf(price);
+            long newPrice = price;
 
             documentReference.child(productName).child("quanity").setValue(newQuantity);
             documentReference.child(productName).child("price").setValue(newPrice);
@@ -236,7 +235,7 @@ quantityReference.child(productName).child("quantity").addListenerForSingleValue
                     product.setCartUserQuntity(newQuantity);
                     v.setText(newQuantity);
                     int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(String.valueOf(product.getPrice()));
-                    String newPrice = String.valueOf(price);
+                    long newPrice = price;
                     documentReference.child(productName).child("quanity").setValue(newQuantity);
                     documentReference.child(productName).child("price").setValue(newPrice);
                 }

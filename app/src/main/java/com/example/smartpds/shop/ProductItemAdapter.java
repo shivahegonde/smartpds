@@ -107,7 +107,7 @@ public class ProductItemAdapter extends FirebaseRecyclerAdapter<Product, Product
         Log.d("OnBind" , productId);
         //holder.mimageView.setImageResource(currentItem.getmImageResource());
         holder.mtextView1.setText(productId);
-        holder.mtextView2.setText(""+model.getPrice());
+        holder.mtextView2.setText((int) model.getPrice());
 
         db = FirebaseDatabase.getInstance();
         documentReference = db.getReference("Cart/" + userId).child(productId);
@@ -120,7 +120,7 @@ public class ProductItemAdapter extends FirebaseRecyclerAdapter<Product, Product
                     String quantity = dataSnapshot.child("quanity").getValue(String.class);
                     model.setCartUserQuntity(quantity);
                     holder.quntity.setText(quantity);
-                    int price = Integer.parseInt(""+model.getPrice()) *  Integer.parseInt(quantity);
+                    int price = Integer.parseInt(String.valueOf(model.getPrice())) *  Integer.parseInt(quantity);
                     String newPrice = String.valueOf(price);
                     model.setCartPriceQuantity(newPrice);
                 }else {
