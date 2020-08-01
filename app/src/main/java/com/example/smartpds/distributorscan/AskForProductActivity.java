@@ -114,7 +114,7 @@ public class AskForProductActivity extends AppCompatActivity {
                             product.setCartUserQuntity(newQuantity);
                             v.setText(newQuantity);
                             int price = Integer.parseInt(product.getCartPriceQuantity()) + Integer.parseInt(String.valueOf(product.getPrice()));
-                            String newPrice = String.valueOf(price);
+                            long newPrice = price;
 
                             documentReference.child(productName).child("quanity").setValue(newQuantity);
                             documentReference.child(productName).child("price").setValue(newPrice);
@@ -138,7 +138,7 @@ public class AskForProductActivity extends AppCompatActivity {
                     product.setCartUserQuntity(newQuantity);
                     v.setText(newQuantity);
                     int price = Integer.parseInt(product.getCartPriceQuantity()) - Integer.parseInt(String.valueOf(product.getPrice()));
-                    String newPrice = String.valueOf(price);
+                    long newPrice = price;
                     documentReference.child(productName).child("quanity").setValue(newQuantity);
                     documentReference.child(productName).child("price").setValue(newPrice);
                 }

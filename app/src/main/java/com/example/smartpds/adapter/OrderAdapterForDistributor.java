@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartpds.Customer;
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.viewHolder.OrderViewHolder;
-import com.example.smartpds.model.Distributer;
+import com.example.smartpds.model.Customers;
 import com.example.smartpds.model.Orders;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -94,7 +94,7 @@ public class OrderAdapterForDistributor extends FirebaseRecyclerAdapter<Orders, 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
                 {
-                    Customer customer = dataSnapshot.getValue(Customer.class);
+                    Customers customer = dataSnapshot.getValue(Customers.class);
                     shopName.setText(customer.getFname()+" "+customer.getLname());
                 }
             }
