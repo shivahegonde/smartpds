@@ -68,7 +68,6 @@ String userType;
                 Toast.makeText(MainActivity.this, "Welcome "+userType, Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
-
             }
         });
     }
