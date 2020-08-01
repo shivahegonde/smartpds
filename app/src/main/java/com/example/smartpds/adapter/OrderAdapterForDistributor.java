@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartpds.Customer;
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.viewHolder.OrderViewHolder;
 import com.example.smartpds.model.Customers;
@@ -63,7 +62,7 @@ public class OrderAdapterForDistributor extends FirebaseRecyclerAdapter<Orders, 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
                 {
-                    Customer customer = dataSnapshot.getValue(Customer.class);
+                    Customers customer = dataSnapshot.getValue(Customers.class);
                     shopAddress.setText(customer.getCity());
                 }
             }
