@@ -101,7 +101,7 @@ String name;
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 databaseReference.child(mobile).setValue(customer);
                 generateDistributorQR();
-                Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
                 intent.putExtra("mobile",mobile);
                 startActivity(intent);
@@ -117,7 +117,7 @@ String name;
             final StorageReference sRef = storageReference.child("Customers/" + mobileNo.getText() + "/" +"QRCode/"+ name + ".jpg");
             boolean save;
             String result;
-            Toast.makeText(this, "Image QR Path   " + savePath + name + ".jpg", Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(this, "Image QR Path   " + savePath + name + ".jpg", Toast.LENGTH_SHORT).show();
             try {
 
                 ////////
@@ -151,7 +151,7 @@ String name;
                         .startDownload(new DownloadListener() {
                             @Override
                             public void onDownloadComplete() {
-                                Toast.makeText(CustomerRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(CustomerRegister.this, "DownLoad Complete", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -165,7 +165,7 @@ String name;
                 Constants.name = name;
                 save = QRGSaver.save(savePath, name, newbitmap, QRGContents.ImageType.IMAGE_JPEG);
                 result = save ? "Image Saved" : "Image Not Saved";
-                Toast.makeText(getApplicationContext(), result + " at " + savePath, Toast.LENGTH_LONG).show();
+             //   Toast.makeText(getApplicationContext(), result + " at " + savePath, Toast.LENGTH_LONG).show();
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setTitle("Generating QR");
                 progressDialog.show();
@@ -182,7 +182,7 @@ String name;
                                 while (!urlTask.isSuccessful()) ;
                                 Uri downloadUrl = urlTask.getResult();
                                 //displaying success toast
-                                Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), " QR Generated", Toast.LENGTH_LONG).show();
 
                                 //creating the upload object to store uploaded image details
 //                                databaseReference.child(mobile).child("qrcodelink").setValue(downloadUrl.toString());
@@ -196,7 +196,7 @@ String name;
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                              //  Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         })
                         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
