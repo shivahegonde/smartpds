@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -182,7 +181,7 @@ String name;
                                 while (!urlTask.isSuccessful()) ;
                                 Uri downloadUrl = urlTask.getResult();
                                 //displaying success toast
-                                Toast.makeText(getApplicationContext(), " QR Generated", Toast.LENGTH_LONG).show();
+                          //      Toast.makeText(getApplicationContext(), " QR Generated", Toast.LENGTH_LONG).show();
 
                                 //creating the upload object to store uploaded image details
 //                                databaseReference.child(mobile).child("qrcodelink").setValue(downloadUrl.toString());
