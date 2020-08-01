@@ -59,14 +59,19 @@ String userType;
 
                 String phoneNumber = "+" +code+ number;
                 Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(MainActivity.this, VerifyPhoneActivity.class);
                 Intent intent = new Intent(MainActivity.this, VerifyPhoneActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);
                 intent.putExtra("usertype",userType);
                 Toast.makeText(MainActivity.this, "Welcome "+userType, Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+
+                if (!userType.equals("distributor")) {
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext() , "Distributer" , Toast.LENGTH_LONG).show();
+                }
 
             }
         });

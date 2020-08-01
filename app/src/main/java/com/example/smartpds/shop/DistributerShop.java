@@ -126,7 +126,7 @@ public class DistributerShop extends AppCompatActivity {
                     }
                     count--;
                     average=total/count;
-                    Toast.makeText(DistributerShop.this, "Average Rating== "+(count)+"Total " +total+" Average  "+average, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(DistributerShop.this, "Average Rating== "+(count)+"Total " +total+" Average  "+average, Toast.LENGTH_SHORT).show();
 //                    float rating = Float.parseFloat(dataSnapshot.child(dataSnapshot.getKey()).getValue(String.class));
 //                    total = total + rating;
 //                    count = count + 1;
@@ -135,7 +135,7 @@ public class DistributerShop extends AppCompatActivity {
                     //                    Picasso.with(DistributerShop.this).load(shop.getShopImage()).into(shopImage);
                     try {
                         if (dataSnapshot.exists()) {
-                            distributorRatingBar.setRating(average);
+                            distributorRatingBar.setRating(5);///
                         }
                         else {
                             Toast.makeText(DistributerShop.this, "Rating not Found Please Rate", Toast.LENGTH_SHORT).show();
