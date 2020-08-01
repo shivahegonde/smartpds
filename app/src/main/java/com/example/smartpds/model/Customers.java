@@ -13,6 +13,7 @@ public class Customers {
     String shopname;
     String state;
     long walletAmmount;
+
     public String getAccountStatus() {
         return accountStatus;
     }
