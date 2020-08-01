@@ -63,7 +63,7 @@ public class OrderAdapterForDistributor extends FirebaseRecyclerAdapter<Orders, 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
                 {
-                    Customer customer = dataSnapshot.getValue(Customer.class);
+                    Customers customer = dataSnapshot.getValue(Customers.class);
                     shopAddress.setText(customer.getCity());
                 }
             }
