@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import com.example.smartpds.model.Product;
 import com.example.smartpds.shop.CartActivity;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -98,7 +96,7 @@ public class AskForProductActivity extends AppCompatActivity {
             @Override
             public void OnItemClick(int position) {
 
-                Toast.makeText(getApplicationContext() , FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext() , FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

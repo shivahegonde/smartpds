@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -123,7 +122,7 @@ public class CartActivity extends AppCompatActivity {
                 distributerOrdersRef.child(distributerOrderId).child("orderPlaced").setValue("no");
 
                 Date date = new Date();
-                Toast.makeText(CartActivity.this, "" + date.getTime(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(CartActivity.this, "" + date.getTime(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(CartActivity.this, VerifyPhoneActivityForOrder.class);
                 intent.putExtra("phonenumber", userId);
                 intent.putExtra("distributormobile", distributorId);
@@ -132,7 +131,7 @@ public class CartActivity extends AppCompatActivity {
                 intent.putExtra("isDistributor",isDistributor);
                 intent.putExtra("totalamount", "" + totalPriceOfCart);
                 startActivity(intent);
-                Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -156,7 +156,7 @@ public class CustomerKycRegister extends AppCompatActivity implements View.OnCli
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "AdharCard Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Aadhar Card", downloadUrl.toString());
@@ -208,7 +208,7 @@ public class CustomerKycRegister extends AppCompatActivity implements View.OnCli
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "PanCard Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Pan Card", downloadUrl.toString());
@@ -260,7 +260,7 @@ public class CustomerKycRegister extends AppCompatActivity implements View.OnCli
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Profile Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Profile Pic ", downloadUrl.toString());

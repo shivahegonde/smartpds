@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartpds.Customer;
 import com.example.smartpds.R;
 import com.example.smartpds.adapter.viewHolder.OrderViewHolder;
 import com.example.smartpds.model.Customers;

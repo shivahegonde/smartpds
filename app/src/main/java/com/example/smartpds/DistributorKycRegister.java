@@ -10,9 +10,6 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -178,7 +175,7 @@ public class DistributorKycRegister extends AppCompatActivity implements View.On
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "AdharCard Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Aadhar Card", downloadUrl.toString());
@@ -230,7 +227,7 @@ public class DistributorKycRegister extends AppCompatActivity implements View.On
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "PanCard Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Pan Card", downloadUrl.toString());
@@ -283,7 +280,7 @@ public class DistributorKycRegister extends AppCompatActivity implements View.On
                             while (!urlTask.isSuccessful()) ;
                             Uri downloadUrl = urlTask.getResult();
                             //displaying success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "ShopLicence Uploaded ", Toast.LENGTH_LONG).show();
 
                             //creating the upload object to store uploaded image details
                             UploadKycDistributor upload = new UploadKycDistributor("" + mobile + " Shop License Card", downloadUrl.toString());
@@ -297,7 +294,7 @@ public class DistributorKycRegister extends AppCompatActivity implements View.On
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                          //  Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
