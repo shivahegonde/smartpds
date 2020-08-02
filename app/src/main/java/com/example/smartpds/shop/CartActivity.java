@@ -133,8 +133,8 @@ public class CartActivity extends AppCompatActivity {
                 Date date = new Date();
                 //otp
 
-
-                ApiInterface apiService =
+//concomment for otp
+                /*ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
 
                 Call<MessageResponse> call = apiService.sentOTP(API_KEY, userId);
@@ -151,7 +151,7 @@ public class CartActivity extends AppCompatActivity {
                         Log.e("ERROR", t.toString());
                     }
 
-                });
+                });*/
 
 
 
