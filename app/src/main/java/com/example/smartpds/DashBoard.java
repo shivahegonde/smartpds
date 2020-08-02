@@ -1,6 +1,8 @@
 package com.example.smartpds;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -12,6 +14,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener {
@@ -53,7 +58,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
     TextView customerName, customerEmail;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase,statusReference;
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
     private ImageView customerProfilePic;
@@ -69,7 +74,25 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         navigationView = findViewById(R.id.user_nav_view);
         navigationView.bringToFront();
         pref = getSharedPreferences("user_details", MODE_PRIVATE);
+        mobile = getIntent().getStringExtra("mobile");
+        statusReference = FirebaseDatabase.getInstance().getReference("Customers").child(mobile);
+        statusReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String status = dataSnapshot.child("accountStatus").getValue(String.class);
+                if (status.equalsIgnoreCase("pending")){
+                    try {
+                        showErrorDialog(DashBoard.this,"Error");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
         if (pref.contains("username") && pref.contains("usertype"))
         {
@@ -105,7 +128,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         customerEmail = mNavigationView.getHeaderView(0).findViewById(R.id.customer_email);
         customerProfilePic = mNavigationView.getHeaderView(0).findViewById(R.id.customer_profile_pic);
         notificationManager = NotificationManagerCompat.from(this);
-        mobile = getIntent().getStringExtra("mobile");
+
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("username",mobile);
         editor.putString("usertype","customer");
@@ -445,7 +468,44 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         return true;
     }
 
+    public void showErrorDialog(Activity activity, String msg) throws IOException {
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.insufficientwallet);
+//        myImage.setImageBitmap(mIcon_val);
+//            myImage.setImageBitmap(myBitmap);
 
+
+        TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+        TextView text1 = (TextView) dialog.findViewById(R.id.text1);
+        text.setTextSize(25);
+        text.setText("Account Staus Pendind");
+        text1.setText("You are not approved consumer.");
+
+        Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
+        Button dialogButton2 = (Button) dialog.findViewById(R.id.btn2);
+        dialogButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finishAffinity();
+                System.exit(0);
+
+            }
+        });
+        dialogButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                finishAffinity();
+                System.exit(0);
+            }
+        });
+        dialog.show();
+
+    }
 
 
 }

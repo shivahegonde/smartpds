@@ -2,6 +2,7 @@ package com.example.smartpds.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartpds.R;
 import com.example.smartpds.VerifyPhoneActivityForOrder;
 import com.example.smartpds.model.Product;
+import com.example.smartpds.utils.ApiClient;
+import com.example.smartpds.utils.ApiInterface;
+import com.example.smartpds.utils.MessageResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,9 +30,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.UUID;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CartActivity extends AppCompatActivity {
-
+    private final static String API_KEY = "fd77b9e1-d47a-11ea-9fa5-0200cd936042";
     private RecyclerView mrecyclerView;
     private CartAdapter productItemAdapter;
     private TextView totalPrice;
@@ -37,6 +45,7 @@ public class CartActivity extends AppCompatActivity {
     private static final String USER_MOBILE_NUMBER = "user_mobile_number";
     int totalPriceOfCart = 0;
     public static String uniqueUserId = "8668283745";
+    String sessionId;
     public static String userId, distributorId;
     String isDistributor;
 
@@ -122,6 +131,31 @@ public class CartActivity extends AppCompatActivity {
                 distributerOrdersRef.child(distributerOrderId).child("orderPlaced").setValue("no");
 
                 Date date = new Date();
+                //otp
+
+
+                ApiInterface apiService =
+                        ApiClient.getClient().create(ApiInterface.class);
+
+                Call<MessageResponse> call = apiService.sentOTP(API_KEY, userId);
+                call.enqueue(new Callback<MessageResponse>() {
+                    @Override
+                    public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                        sessionId = response.body().getDetails();
+                        Log.d("SenderID", sessionId);
+                        //you may add code to automatically fetch OTP from messages.
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageResponse> call, Throwable t) {
+                        Log.e("ERROR", t.toString());
+                    }
+
+                });
+
+
+
+
               //  Toast.makeText(CartActivity.this, "" + date.getTime(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(CartActivity.this, VerifyPhoneActivityForOrder.class);
                 intent.putExtra("phonenumber", userId);
@@ -130,6 +164,9 @@ public class CartActivity extends AppCompatActivity {
                 intent.putExtra("Distributerkey",distributerOrderId);
                 intent.putExtra("isDistributor",isDistributor);
                 intent.putExtra("totalamount", "" + totalPriceOfCart);
+                intent.putExtra("apikey", "" + API_KEY);
+                intent.putExtra("sessionid", "" + sessionId);
+
                 startActivity(intent);
             //    Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();
             }
