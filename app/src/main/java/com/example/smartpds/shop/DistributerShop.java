@@ -135,7 +135,7 @@ public class DistributerShop extends AppCompatActivity {
                     //                    Picasso.with(DistributerShop.this).load(shop.getShopImage()).into(shopImage);
                     try {
                         if (dataSnapshot.exists()) {
-                            distributorRatingBar.setRating(5);///
+                            distributorRatingBar.setRating(average);///
                         }
                         else {
                             Toast.makeText(DistributerShop.this, "Rating not Found Please Rate", Toast.LENGTH_SHORT).show();

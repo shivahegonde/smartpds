@@ -88,34 +88,34 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                             if (userType.equalsIgnoreCase("distributor")){
                                 Toast.makeText(getApplicationContext() , "Distributer" ,Toast.LENGTH_LONG).show();
 
-//                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Distributors/" + mobileNo);
-//                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                                    @Override
-//                                    public void onDataChange(DataSnapshot snapshot) {
-//                                        if (snapshot.exists()) {
-//                                            // Exist! Do whatever.
-//                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorDashBoard.class);
-//                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                            intent.putExtra("mobile", mobileNo);
-//                                            startActivity(intent);
-//
-//                                        } else {
-//                                            // Don't exist! Do something.
-//                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorRegister.class);
-//                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                            intent.putExtra("mobile", mobileNo);
-//                                            startActivity(intent);
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(DatabaseError error) {
-//                                        // Failed, how to handle?
-//
-//                                    }
-//
-//                                });
+                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Distributors/" + mobileNo);
+                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            // Exist! Do whatever.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorDashBoard.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+
+                                        } else {
+                                            // Don't exist! Do something.
+                                            Intent intent = new Intent(VerifyPhoneActivity.this, DistributorRegister.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            intent.putExtra("mobile", mobileNo);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        // Failed, how to handle?
+
+                                    }
+
+                                });
 
                             }
                             else

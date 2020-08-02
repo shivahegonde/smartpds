@@ -65,13 +65,7 @@ String userType;
                 intent.putExtra("mobile", number);
                 intent.putExtra("usertype",userType);
                 Toast.makeText(MainActivity.this, "Welcome "+userType, Toast.LENGTH_SHORT).show();
-
-                if (!userType.equals("distributor")) {
                     startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext() , "Distributer" , Toast.LENGTH_LONG).show();
-                }
 
             }
         });
