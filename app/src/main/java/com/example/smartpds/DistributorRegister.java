@@ -36,15 +36,48 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.zxing.WriterException;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.io.File;
+import java.util.List;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import androidmads.library.qrgenearator.QRGSaver;
 
-public class DistributorRegister extends AppCompatActivity {
-EditText firstName,lastName, mobileNo,emailId,shopName,distributorAddress,distributorCity,distributorPincode,distributorState;
+public class DistributorRegister extends AppCompatActivity implements Validator.ValidationListener {
+EditText firstName,lastName ;
+
+
+    @NotEmpty
+    @Length(min = 10, max = 10)
+    EditText mobileNo ;
+
+    @NotEmpty
+    @Email
+    @Pattern(regex = "^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+")
+    EditText emailId ;
+
+    @NotEmpty
+    EditText shopName;
+
+    @NotEmpty
+    EditText  distributorAddress ;
+
+    @NotEmpty
+    EditText distributorCity ;
+
+    @NotEmpty
+    EditText distributorPincode ;
+
+    @NotEmpty
+    EditText distributorState;
+
 Button registerButton;
 static int count=0;
     private DatabaseReference mDatabase;
@@ -60,6 +93,9 @@ Distributer distributor;
     File file;
     String dirPath, fileName;
     String name;
+
+    private Validator validator;
+
     String url = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +117,43 @@ Distributer distributor;
         databaseReference= FirebaseDatabase.getInstance().getReference("Distributors");
         distributor =new Distributer();
 
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
 
     }
     public void insert(View view) {
+
+        validator.validate();
+
+
+//        distributor.setFname(firstName.getText().toString().trim());
+//        distributor.setLname(lastName.getText().toString().trim());
+//        distributor.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
+//        distributor.setEmail(emailId.getText().toString().trim());
+//        shopNameString = shopName.getText().toString().trim();
+//        mDatabase = FirebaseDatabase.getInstance().getReference("KYC").child("DistributorKYC").child(""+mobileNo.getText());
+//        distributor.setShopname(shopNameString);
+//        distributor.setAccountStatus("pending");
+//        distributor.setAddress(distributorAddress.getText().toString().trim());
+//        distributor.setCity(distributorCity.getText().toString().trim());
+//        distributor.setKycDone("no");
+//        distributor.setWalletAmmount(0);
+//        distributor.setState(distributorState.getText().toString().trim());
+//        distributor.setPincode(Integer.parseInt(distributorPincode.getText().toString().trim()));
+//        distributor.setShopImage("https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/uploads%2Fdigirationshop.png?alt=media&token=08517b1d-3ff5-4c0d-a86b-0c9250341e9e");
+//        mobile=mobileNo.getText().toString().trim();
+//                databaseReference.child(mobileNo.getText().toString().trim()).setValue(distributor);
+//                Toast.makeText(DistributorRegister.this, "Added into Distributors", Toast.LENGTH_SHORT).show();
+//                //Qr code for this Distributor
+//                generateDistributorQR();
+//                Intent intent = new Intent(DistributorRegister.this, DistributorKycRegister.class);
+//                intent.putExtra("mobile", "" + mobileNo.getText());
+//                startActivity(intent);
+
+    }
+
+    private void submit() {
 
         distributor.setFname(firstName.getText().toString().trim());
         distributor.setLname(lastName.getText().toString().trim());
@@ -101,27 +171,13 @@ Distributer distributor;
         distributor.setPincode(Integer.parseInt(distributorPincode.getText().toString().trim()));
         distributor.setShopImage("https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/uploads%2Fdigirationshop.png?alt=media&token=08517b1d-3ff5-4c0d-a86b-0c9250341e9e");
         mobile=mobileNo.getText().toString().trim();
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                databaseReference.child(mobileNo.getText().toString().trim()).setValue(distributor);
-                Toast.makeText(DistributorRegister.this, "Added into Distributors", Toast.LENGTH_SHORT).show();
-
-                //Qr code for this Distributor
-
-
-                generateDistributorQR();
-
-                Intent intent = new Intent(DistributorRegister.this, DistributorKycRegister.class);
-                intent.putExtra("mobile", "" + mobileNo.getText());
-                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        databaseReference.child(mobileNo.getText().toString().trim()).setValue(distributor);
+        Toast.makeText(DistributorRegister.this, "Added into Distributors", Toast.LENGTH_SHORT).show();
+        //Qr code for this Distributor
+        generateDistributorQR();
+        Intent intent = new Intent(DistributorRegister.this, DistributorKycRegister.class);
+        intent.putExtra("mobile", "" + mobileNo.getText());
+        startActivity(intent);
     }
 
 
@@ -252,5 +308,25 @@ Distributer distributor;
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        submit();
+    }
+
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            // Display error messages
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

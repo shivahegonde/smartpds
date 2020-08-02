@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:3.2.0'         // date & time picker
 
 
+    implementation 'com.mobsandgeeks:android-saripaar:2.0.3' //validation
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
