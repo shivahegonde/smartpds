@@ -6,6 +6,15 @@ public class Benificiary {
     String photouri;
     String adharuri;
 
+    public long getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(long contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    long contactNumber;
     public boolean isStatus() {
         return status;
     }

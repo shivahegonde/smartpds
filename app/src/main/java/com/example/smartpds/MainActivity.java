@@ -47,9 +47,7 @@ String userType;
             @Override
             public void onClick(View v) {
                 String code = CountryData.countryAreaCodes[spinner.getSelectedItemPosition()];
-
                 String number = editText.getText().toString().trim();
-
                 if (number.isEmpty() || number.length() < 10) {
                     editText.setError("Valid number is required");
                     editText.requestFocus();
@@ -57,15 +55,14 @@ String userType;
                 }
 
                 String phoneNumber = "+" +code+ number;
-//                Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
+//              Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, DashBoard.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);
                 intent.putExtra("usertype",userType);
                 Toast.makeText(MainActivity.this, "Welcome "+userType, Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-
+                startActivity(intent);
             }
         });
     }

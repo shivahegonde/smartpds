@@ -1,6 +1,7 @@
 package com.example.smartpds.benificiary;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,8 +14,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.example.smartpds.R;
 import com.example.smartpds.model.Benificiary;
@@ -25,21 +29,36 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
-public class AddBenificiaryActivity extends AppCompatActivity {
+public class AddBenificiaryActivity extends AppCompatActivity implements Validator.ValidationListener{
 
 
     private static final String UPLOAD_IMAGE_STORAGE_KEY = "benificiaryDocuments";
     ImageButton btClose , btDone;
     LinearLayout photoContainer , dobContainer , adharcardContainer;
+
+
     TextView imagename , benificiaryDob , adharcard;
+
+    @NotEmpty
+    @Length(min = 3, max = 10)
     EditText benificiaryName;
+
+    @NotEmpty
+    @Length(min = 10, max = 10)
+    EditText benifiCiaryContact ;
+
     private ImageView imageview;
 
     private static final int IMAGE_REQUEST = 1;
@@ -52,6 +71,8 @@ public class AddBenificiaryActivity extends AppCompatActivity {
 
     private static final String USERID = "userid";
     private ProgressDialog progressDialog;
+
+    private Validator validator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +90,20 @@ public class AddBenificiaryActivity extends AppCompatActivity {
         initpicker();
 
 
+        validator = new Validator(this);
+        validator.setValidationListener(this);
 
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                validator.validate();
 
-                progressDialog = new ProgressDialog(AddBenificiaryActivity.this);
-                progressDialog.setMessage("Submitting benificiary detail");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                submitinformation();
+//                progressDialog = new ProgressDialog(AddBenificiaryActivity.this);
+//                progressDialog.setMessage("Submitting benificiary detail");
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//                submitinformation();
             }
         });
 
@@ -98,20 +122,58 @@ public class AddBenificiaryActivity extends AppCompatActivity {
                         uploadinformation();
                     }else {
                         //benidiciary dob error
+                        progressDialog.dismiss();
+                        new AlertDialog.Builder(this)
+                                .setTitle("Empty Detail")
+                                .setMessage("please select your date of Birth")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Continue with delete operation
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 }
                 else {
                     //Benificiary Name Error
+                    benificiaryName.setError("Benificiary Name can't be Empty");
                 }
             }
             else
             {
                 //adhara error dialog
+                progressDialog.dismiss();
+                new AlertDialog.Builder(this)
+                        .setTitle("Empty Detail")
+                        .setMessage("Please Upload Your Adhar Card")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Continue with delete operation
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         }
         else
         {
             //photoerror dialog
+            progressDialog.dismiss();
+            new AlertDialog.Builder(this)
+                    .setTitle("Empty Detail")
+                    .setMessage("Please Upload Your Profile Pic")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Continue with delete operation
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
         }
 
 
@@ -181,7 +243,7 @@ public class AddBenificiaryActivity extends AppCompatActivity {
         Benificiary benificiary = new Benificiary();
         benificiary.setBname(benificiaryName.getText().toString());
         benificiary.setBdob(benificiaryDob.getText().toString());
-
+        benificiary.setContactNumber(Long.parseLong(benifiCiaryContact.getText().toString()));
 
       uploadPhoto(photoUri, new OnUploadListner() {
           @Override
@@ -214,6 +276,7 @@ public class AddBenificiaryActivity extends AppCompatActivity {
 
     private void uploadBenificiaryObject(Benificiary benificiary) {
         benificiary.setStatus(false);
+
         benificiaryReference.push().setValue(benificiary);
         progressDialog.dismiss();
     }
@@ -269,6 +332,8 @@ public class AddBenificiaryActivity extends AppCompatActivity {
         adharcard = findViewById(R.id.benificiary_adharcard_filename_textview);
 
         benificiaryName = findViewById(R.id.benificiary_name_edittext);
+
+        benifiCiaryContact = findViewById(R.id.benificiary_mobile_number);
 
     }
 
@@ -345,5 +410,34 @@ public class AddBenificiaryActivity extends AppCompatActivity {
     public static String getFormattedDateSimple(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return newFormat.format(new Date(dateTime));
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        submit();
+    }
+
+    private void submit() {
+        progressDialog = new ProgressDialog(AddBenificiaryActivity.this);
+        progressDialog.setMessage("Submitting benificiary detail");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        submitinformation();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            // Display error messages
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 }

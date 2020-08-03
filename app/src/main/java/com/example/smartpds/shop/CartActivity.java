@@ -123,8 +123,7 @@ public class CartActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext() , "Your Cart is Empty ! " ,Toast.LENGTH_LONG ).show();
                 }
-
-    }
+            }
 
 
   void  proceedForOrder()

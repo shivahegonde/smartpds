@@ -87,7 +87,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) { //change remove ! for authentication
-                            if (userType.equalsIgnoreCase("distributor")){
+                            if (userType!=null && userType.equalsIgnoreCase("distributor")){
                                 Toast.makeText(getApplicationContext() , "Distributer" ,Toast.LENGTH_LONG).show();
 
                                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Distributors/" + mobileNo);
