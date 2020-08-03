@@ -74,6 +74,21 @@
                     android:hint="Enter a Benificiary Name" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/grey_40" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_mlarge" android:text="Benificiary Contact Number" />
+            <EditText
+                android:textColorHint="@color/grey_20"
+                android:background="@drawable/edit_text_round_bg_outline"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="0dp"
+                android:id="@+id/benificiary_mobile_number"
+                android:inputType="number"
+                android:hint="Benificiary Contact Number " />
+
             <TextView android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/grey_40" android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -48,7 +48,9 @@
         <activity android:name=".distributorscan.AskForProductActivity"></activity>
         <activity android:name=".orderview.DisplayOrdersActivity"></activity>
         <activity android:name=".orderview.DisplayOrdersActivityForDistributor"></activity>
-        <activity android:name=".benificiary.AddBenificiaryActivity"></activity>
+        <activity android:name=".benificiary.AddBenificiaryActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            ></activity>
         <activity android:name=".benificiary.ViewBenificiaryActivity"></activity>
         <activity android:name=".BeneficiaryActivity"></activity>
         <activity android:name=".recyclerex.product.ProductActivity"></activity>

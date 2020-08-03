@@ -25,7 +25,6 @@ String userType;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userType=getIntent().getStringExtra("usertype");
-        Toast.makeText(this, "User type= "+userType, Toast.LENGTH_SHORT).show();
         spinner = findViewById(R.id.spinnercountries);
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, CountryData.countryNames));
 
@@ -51,7 +50,7 @@ String userType;
 
                 String number = editText.getText().toString().trim();
 
-                if (number.isEmpty() || number.length() != 10) {
+                if (number.isEmpty() || number.length() < 10) {
                     editText.setError("Valid number is required");
                     editText.requestFocus();
                     return;
@@ -59,7 +58,7 @@ String userType;
 
                 String phoneNumber = "+" +code+ number;
 //                Toast.makeText(MainActivity.this, "TimemStamp= "+ ServerValue.TIMESTAMP, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, VerifyPhoneActivity.class);
+                Intent intent = new Intent(MainActivity.this, DashBoard.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("phonenumber", phoneNumber);
                 intent.putExtra("mobile", number);
