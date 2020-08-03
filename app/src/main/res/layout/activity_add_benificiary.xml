@@ -67,6 +67,9 @@
                     android:textColorHint="@color/grey_20"
                     android:background="@drawable/edit_text_round_bg_outline"
                     android:id="@+id/benificiary_name_edittext"
+                    android:inputType="textPersonName"
+                    android:maxLength="30"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                     android:layout_width="fill_parent" android:layout_height="fill_parent"
                     android:hint="Enter a Benificiary Name" />
 

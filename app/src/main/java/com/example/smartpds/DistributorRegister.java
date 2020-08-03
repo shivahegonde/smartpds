@@ -64,18 +64,23 @@ EditText firstName,lastName ;
     EditText emailId ;
 
     @NotEmpty
+    @Length(min = 4, max = 20)
     EditText shopName;
 
     @NotEmpty
+    @Length(min = 5, max = 50)
     EditText  distributorAddress ;
 
     @NotEmpty
+    @Length(min = 3, max = 20)
     EditText distributorCity ;
 
     @NotEmpty
+    @Length(min = 6, max = 6)
     EditText distributorPincode ;
 
     @NotEmpty
+    @Length(min = 3, max = 20)
     EditText distributorState;
 
 Button registerButton;

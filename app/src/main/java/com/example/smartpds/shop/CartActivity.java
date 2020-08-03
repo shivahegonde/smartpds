@@ -2,6 +2,7 @@ package com.example.smartpds.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartpds.R;
 import com.example.smartpds.VerifyPhoneActivityForOrder;
 import com.example.smartpds.model.Product;
+import com.example.smartpds.utils.ApiClient;
+import com.example.smartpds.utils.ApiInterface;
+import com.example.smartpds.utils.MessageResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class CartActivity extends AppCompatActivity {

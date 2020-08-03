@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
@@ -80,6 +81,7 @@ public class AddBenificiaryActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 submitinformation();
+
             }
         });
 
@@ -215,6 +217,7 @@ public class AddBenificiaryActivity extends AppCompatActivity {
     private void uploadBenificiaryObject(Benificiary benificiary) {
         benificiary.setStatus(false);
         benificiaryReference.push().setValue(benificiary);
+        Toast.makeText(AddBenificiaryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.dismiss();
     }
 

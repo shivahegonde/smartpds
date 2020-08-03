@@ -45,6 +45,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verify_phone);
 
         userType=getIntent().getStringExtra("usertype");
+        Toast.makeText(this, "User type= "+userType, Toast.LENGTH_SHORT).show();
         mAuth = FirebaseAuth.getInstance();
         signIn = findViewById(R.id.buttonsignin);
         progressBar = findViewById(R.id.progressbar);

@@ -62,7 +62,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
     ImageView dialog,distributorPicture;
     String mobile;
     TextView distributorName, distributorEmail;
-    private DatabaseReference mDatabase,quota;
+    private DatabaseReference mDatabase,quota,statusReference;
     private DatabaseReference mDatabaseKyc;
     private NavigationView mNavigationView;
     SharedPreferences pref;
@@ -76,6 +76,25 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         drawerLayout = (DrawerLayout) findViewById(R.id.distributor_drawer_layout);
         navigationView = findViewById(R.id.distributor_nav_view);
         navigationView.bringToFront();
+        mobile = getIntent().getStringExtra("mobile");
+        statusReference = FirebaseDatabase.getInstance().getReference("Distributors").child(mobile);
+        statusReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String status = dataSnapshot.child("accountStatus").getValue(String.class);
+                if (status.equalsIgnoreCase("pending")){
+                    try {
+                        showErrorDialog(DistributorDashBoard.this,"Error");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setHomeButtonEnabled(true);
@@ -100,7 +119,7 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
         /////////////////////////////////
         mNavigationView = (NavigationView) findViewById(R.id.distributor_nav_view);
 
-        mobile = getIntent().getStringExtra("mobile");
+
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("username",mobile);
         editor.putString("usertype","distributor");
@@ -480,6 +499,45 @@ public class DistributorDashBoard extends AppCompatActivity implements Navigatio
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public void showErrorDialog(Activity activity, String msg) throws IOException {
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.insufficientwallet);
+//        myImage.setImageBitmap(mIcon_val);
+//            myImage.setImageBitmap(myBitmap);
+
+
+        TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+        TextView text1 = (TextView) dialog.findViewById(R.id.text1);
+        text.setTextSize(25);
+        text.setText("Account Status Pending");
+        text1.setText("You are not approved Distributor.");
+
+        Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);
+        Button dialogButton2 = (Button) dialog.findViewById(R.id.btn2);
+        dialogButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finishAffinity();
+                System.exit(0);
+
+            }
+        });
+        dialogButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                finishAffinity();
+                System.exit(0);
+            }
+        });
+        dialog.show();
 
     }
 }

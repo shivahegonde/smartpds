@@ -159,7 +159,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                 });
 
 
-
+                placeOrder(code);
 
 
 

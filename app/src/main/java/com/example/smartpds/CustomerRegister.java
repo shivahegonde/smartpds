@@ -67,15 +67,19 @@ public class CustomerRegister extends AppCompatActivity implements Validator.Val
     EditText emailId ;
 
     @NotEmpty
+    @Length(min = 3, max = 100)
     EditText customerAddress ;
 
     @NotEmpty
+    @Length(min = 3, max = 30)
     EditText customerCity ;
 
     @NotEmpty
+    @Length(min = 6, max = 6)
     EditText customerPincode;
 
     @NotEmpty
+    @Length(min = 3, max = 20)
     EditText customerState;
 
 

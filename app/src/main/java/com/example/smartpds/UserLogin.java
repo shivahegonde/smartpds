@@ -52,7 +52,6 @@ Intent intent;
                 Toast.makeText(UserLogin.this, "Customer", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(UserLogin.this,MainActivity.class);
                 intent.putExtra("usertype","customer");
-
                 startActivity(intent);
 
 
@@ -64,8 +63,6 @@ Intent intent;
                 Toast.makeText(UserLogin.this, "Distributor", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(UserLogin.this,MainActivity.class);
                 intent.putExtra("usertype","distributor");
-
-
                 startActivity(intent);
             }
         });

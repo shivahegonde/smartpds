@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:padding="40dp"
+    android:background="@drawable/photobg"
     android:orientation="vertical"
 
     tools:context=".CustomerRegister">
@@ -40,7 +41,6 @@
         android:layout_height="50dp"
         android:padding="10dp"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:inputType="text"
         android:hint="Enter Last Name" />
     <EditText
         android:id="@+id/mobno"
@@ -49,6 +49,7 @@
         android:layout_height="50dp"
         android:padding="10dp"
         android:layout_marginTop="5dp"
+
         android:inputType="number"
         android:hint="Enter Mobile Number"/>
     <EditText
@@ -77,6 +78,7 @@
         android:background="@drawable/et_style"
         android:layout_height="50dp"
         android:padding="10dp"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:inputType="text"
         android:hint="Enter City"/>
     <EditText
@@ -88,7 +90,6 @@
         android:padding="10dp"
         android:inputType="number"
         android:hint="Enter Pincode"/>
-
     <EditText
         android:id="@+id/state"
         android:layout_width="match_parent"
@@ -96,7 +97,7 @@
         android:layout_height="50dp"
         android:padding="10dp"
         android:layout_marginTop="5dp"
-
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:inputType="text"
         android:hint="Enter State"/>
 </LinearLayout>
