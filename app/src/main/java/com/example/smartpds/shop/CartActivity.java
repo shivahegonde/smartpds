@@ -2,7 +2,6 @@ package com.example.smartpds.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,9 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartpds.R;
 import com.example.smartpds.VerifyPhoneActivityForOrder;
 import com.example.smartpds.model.Product;
-import com.example.smartpds.utils.ApiClient;
-import com.example.smartpds.utils.ApiInterface;
-import com.example.smartpds.utils.MessageResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,10 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.UUID;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class CartActivity extends AppCompatActivity {
@@ -50,6 +42,8 @@ public class CartActivity extends AppCompatActivity {
     public static String userId, distributorId;
     String isDistributor;
 
+    TextView emptymsg ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +52,7 @@ public class CartActivity extends AppCompatActivity {
         mrecyclerView = findViewById(R.id.cartListRecyclerView);
         mrecyclerView.setLayoutManager(new LinearLayoutManager(this));
         totalPrice = findViewById(R.id.totalamountvalue);
+        emptymsg = findViewById(R.id.emptymsg);
         userId = getIntent().getStringExtra("customerMobile");
         distributorId = getIntent().getStringExtra("distributorMobile");
         isDistributor = getIntent().getStringExtra("isDistributor");
@@ -71,35 +66,39 @@ public class CartActivity extends AppCompatActivity {
         productItemAdapter = new CartAdapter(options);
         mrecyclerView.setAdapter(productItemAdapter);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Cart").child(userId);
+
         final DatabaseReference checkoutReference = FirebaseDatabase.getInstance().getReference("Orders").child(userId);
         final DatabaseReference distributerOrdersRef = FirebaseDatabase.getInstance().getReference("Orders/" + distributorId);
 
-// use firebase auth userid instead of uniqueuserid
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Cart").child(userId);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-//                    long price = snapshot.child("price").getValue(long.class);
-//                    String qty = snapshot.child("quanity").getValue(String.class);
+                    if (snapshot.exists()) {
+                        Product product = snapshot.getValue(Product.class);
 
-                    Product product =snapshot.getValue(Product.class);
-                    //    Product model = new Product(price , qty);
-                    //   model.setPrice(price);
-                    // model.setQuanity(qty);
-
-                    long price = product.getPrice();
-                    if (price != 0) {
-                        long modelPricce = price;
-                        totalPriceOfCart += modelPricce;
+                        long price = product.getPrice();
+                        if (price != 0) {
+                            long modelPricce = price;
+                            totalPriceOfCart += modelPricce;
+                        }
                     }
-
+                    else {
+                        emptymsg.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 String totalprice = String.valueOf(totalPriceOfCart);
                 totalPrice.setText(totalprice);
+
+                int total= Integer.parseInt(totalprice);
+                if (total==0)
+                {
+                    emptymsg.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -108,31 +107,50 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
+
+
+
         chekoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Order order=new Order("001",""+totalPriceOfCart,userId,distributorId,"no");
-                String orderId = checkoutReference.push().getKey();
-                String distributerOrderId =   distributerOrdersRef.push().getKey();
+                String total = totalPrice.getText().toString();
+                int t = Integer.parseInt(total);
 
-                String uniqueOrder = UUID.randomUUID().toString();
+                if (t!=0)
+                {
+                    proceedForOrder();
+                }
+                else {
+                    Toast.makeText(getApplicationContext() , "Your Cart is Empty ! " ,Toast.LENGTH_LONG ).show();
+                }
 
-                checkoutReference.child(orderId).child("orderId").setValue(uniqueOrder);
-                checkoutReference.child(orderId).child("totalAmount").setValue("" + totalPriceOfCart);
-                checkoutReference.child(orderId).child("customer").setValue(userId);
-                checkoutReference.child(orderId).child("distributor").setValue(distributorId);
-                checkoutReference.child(orderId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-                checkoutReference.child(orderId).child("orderPlaced").setValue("no");
+    }
 
-                distributerOrdersRef.child(distributerOrderId).child("orderId").setValue(uniqueOrder);
-                distributerOrdersRef.child(distributerOrderId).child("totalAmount").setValue("" + totalPriceOfCart);
-                distributerOrdersRef.child(distributerOrderId).child("customer").setValue(userId);
-                distributerOrdersRef.child(distributerOrderId).child("distributor").setValue(distributorId);
-                distributerOrdersRef.child(distributerOrderId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-                distributerOrdersRef.child(distributerOrderId).child("orderPlaced").setValue("no");
 
-                Date date = new Date();
-                //otp
+  void  proceedForOrder()
+    {
+        //                Order order=new Order("001",""+totalPriceOfCart,userId,distributorId,"no");
+        String orderId = checkoutReference.push().getKey();
+        String distributerOrderId =   distributerOrdersRef.push().getKey();
+
+        String uniqueOrder = UUID.randomUUID().toString();
+
+        checkoutReference.child(orderId).child("orderId").setValue(uniqueOrder);
+        checkoutReference.child(orderId).child("totalAmount").setValue("" + totalPriceOfCart);
+        checkoutReference.child(orderId).child("customer").setValue(userId);
+        checkoutReference.child(orderId).child("distributor").setValue(distributorId);
+        checkoutReference.child(orderId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+        checkoutReference.child(orderId).child("orderPlaced").setValue("no");
+
+        distributerOrdersRef.child(distributerOrderId).child("orderId").setValue(uniqueOrder);
+        distributerOrdersRef.child(distributerOrderId).child("totalAmount").setValue("" + totalPriceOfCart);
+        distributerOrdersRef.child(distributerOrderId).child("customer").setValue(userId);
+        distributerOrdersRef.child(distributerOrderId).child("distributor").setValue(distributorId);
+        distributerOrdersRef.child(distributerOrderId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+        distributerOrdersRef.child(distributerOrderId).child("orderPlaced").setValue("no");
+
+        Date date = new Date();
+        //otp
 
 
                 ApiInterface apiService =
@@ -158,22 +176,21 @@ public class CartActivity extends AppCompatActivity {
 
 
 
-              //  Toast.makeText(CartActivity.this, "" + date.getTime(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(CartActivity.this, VerifyPhoneActivityForOrder.class);
-                intent.putExtra("phonenumber", userId);
-                intent.putExtra("distributormobile", distributorId);
-                intent.putExtra("key",orderId);
-                intent.putExtra("Distributerkey",distributerOrderId);
-                intent.putExtra("isDistributor",isDistributor);
-                intent.putExtra("totalamount", "" + totalPriceOfCart);
-                intent.putExtra("apikey", "" + API_KEY);
-                intent.putExtra("sessionid", "" + sessionId);
+        //  Toast.makeText(CartActivity.this, "" + date.getTime(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(CartActivity.this, VerifyPhoneActivityForOrder.class);
+        intent.putExtra("phonenumber", userId);
+        intent.putExtra("distributormobile", distributorId);
+        intent.putExtra("key",orderId);
+        intent.putExtra("Distributerkey",distributerOrderId);
+        intent.putExtra("isDistributor",isDistributor);
+        intent.putExtra("totalamount", "" + totalPriceOfCart);
+        intent.putExtra("apikey", "" + API_KEY);
+        intent.putExtra("sessionid", "" + sessionId);
 
-                startActivity(intent);
-            //    Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();
-            }
+        startActivity(intent);
+        //    Toast.makeText(CartActivity.this, "Items will be added into firebase " + distributorId, Toast.LENGTH_SHORT).show();
+    }
         });
-
 
     }
 

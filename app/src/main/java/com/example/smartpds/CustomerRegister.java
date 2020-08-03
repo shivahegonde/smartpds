@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,17 +36,50 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.zxing.WriterException;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.io.File;
-import java.security.acl.LastOwnerException;
+import java.util.List;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import androidmads.library.qrgenearator.QRGSaver;
 
-public class CustomerRegister extends AppCompatActivity {
-EditText firstName,lastName, mobileNo,emailId,customerAddress,customerCity,customerPincode,customerState;
-Button registerButton;
+public class CustomerRegister extends AppCompatActivity implements Validator.ValidationListener {
+
+
+    @NotEmpty
+    @Length(min = 3, max = 10)
+    EditText firstName,lastName;
+
+    @NotEmpty
+    @Length(min = 10, max = 10)
+    EditText mobileNo;
+
+    @NotEmpty
+    @Email
+    @Pattern(regex = "^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+")
+    EditText emailId ;
+
+    @NotEmpty
+    EditText customerAddress ;
+
+    @NotEmpty
+    EditText customerCity ;
+
+    @NotEmpty
+    EditText customerPincode;
+
+    @NotEmpty
+    EditText customerState;
+
+
+    Button registerButton;
     QRGEncoder qrgEncoder;
     private DatabaseReference mDatabase;
     String url = "https://firebasestorage.googleapis.com/v0/b/crudoperationapp-3b7b0.appspot.com/o/qrbackground%2Fration.jpg?alt=media&token=d813630f-1c13-41a3-a827-ce0b5b13e676";
@@ -61,6 +95,9 @@ Customers customer;
     String dirPath, fileName;
 String name;
     private StorageReference storageReference;
+
+    private Validator validator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,50 +117,63 @@ String name;
         storageReference = FirebaseStorage.getInstance().getReference();
         customer=new Customers();
 
+
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
     }
     public void insert(View view){
-        String customerFirstName=firstName.getText().toString().trim();
-        String customerLastName=lastName.getText().toString().trim();
-        String mobile=mobileNo.getText().toString().trim();
-        String email=emailId.getText().toString().trim();
-        String address=customerAddress.getText().toString().trim();
-        String city=customerCity.getText().toString().trim();
-        String state=customerState.getText().toString().trim();
-        String pincode=customerPincode.getText().toString().trim();
 
+        validator.validate();
+//
+//        customer.setFname(firstName.getText().toString().trim());
+//        customer.setLname(lastName.getText().toString().trim());
+//        customer.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
+//        customer.setEmail(emailId.getText().toString().trim());
+//        name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
+//        final String mobile=mobileNo.getText().toString().trim();
+//        customer.setAddress(customerAddress.getText().toString().trim());
+//        customer.setCity(customerCity.getText().toString().trim());
+//        customer.setKycDone("no");
+//        customer.setWalletAmmount(0);
+//        customer.setAccountStatus("pending");
+//        customer.setState(customerState.getText().toString().trim());
+//        customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
+//
+//                databaseReference.child(mobile).setValue(customer);
+//                generateDistributorQR();
+//                Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
+//                intent.putExtra("mobile",mobile);
+//                startActivity(intent);
 
+    }
 
+    private void submit() {
 
-
-        customer.setFname(customerFirstName);
-        customer.setLname(customerLastName);
-        customer.setMobile(Long.parseLong(mobile));
-        customer.setEmail(email);
+        customer.setFname(firstName.getText().toString().trim());
+        customer.setLname(lastName.getText().toString().trim());
+        customer.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
+        customer.setEmail(emailId.getText().toString().trim());
         name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
-        customer.setAddress(address);
-        customer.setCity(city);
+        final String mobile=mobileNo.getText().toString().trim();
+        customer.setAddress(customerAddress.getText().toString().trim());
+        customer.setCity(customerCity.getText().toString().trim());
         customer.setKycDone("no");
         customer.setWalletAmmount(0);
         customer.setAccountStatus("pending");
-        customer.setState(state);
-        customer.setPincode(Integer.parseInt(pincode));
+        customer.setState(customerState.getText().toString().trim());
+        customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
 
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                databaseReference.child(mobile).setValue(customer);
-                generateDistributorQR();
-             //   Toast.makeText(CustomerRegister.this, "Added into Customers", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
-                intent.putExtra("mobile",mobile);
-                startActivity(intent);
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        databaseReference.child(mobile).setValue(customer);
+        generateDistributorQR();
+        Intent intent=new Intent(CustomerRegister.this,CustomerKycRegister.class);
+        intent.putExtra("mobile",mobile);
+        startActivity(intent);
+
     }
+
+
     private void generateDistributorQR() {
         while(count!=1) {
             final StorageReference sRef = storageReference.child("Customers/" + mobileNo.getText() + "/" +"QRCode/"+ name + ".jpg");
@@ -249,5 +299,29 @@ String name;
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        registerButton.setEnabled(true);
+
+        submit();
+
+    }
+
+
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            // Display error messages
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

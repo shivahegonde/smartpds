@@ -27,8 +27,9 @@
         android:layout_width="match_parent"
         android:background="@drawable/et_style"
         android:layout_height="50dp"
-        android:inputType="textPersonName"
         android:padding="10dp"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        android:inputType="text"
         android:hint="Enter First Name" />
 
     <EditText
@@ -36,9 +37,10 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:background="@drawable/et_style"
-        android:inputType="textPersonName"
         android:layout_height="50dp"
         android:padding="10dp"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        android:inputType="text"
         android:hint="Enter Last Name" />
     <EditText
         android:id="@+id/mobno"
@@ -47,8 +49,6 @@
         android:layout_height="50dp"
         android:padding="10dp"
         android:layout_marginTop="5dp"
-        android:validateLength="@{10}"
-
         android:inputType="number"
         android:hint="Enter Mobile Number"/>
     <EditText
@@ -59,7 +59,6 @@
         android:padding="10dp"
         android:layout_marginTop="5dp"
         android:inputType="textEmailAddress"
-        
         android:hint="Enter Email"/>
     <EditText
         android:id="@+id/address"
@@ -89,6 +88,7 @@
         android:padding="10dp"
         android:inputType="number"
         android:hint="Enter Pincode"/>
+
     <EditText
         android:id="@+id/state"
         android:layout_width="match_parent"

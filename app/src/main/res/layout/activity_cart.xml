@@ -10,13 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cartListRecyclerView"
-        tools:listitem="@layout/cartitem_layout"
+
         android:layout_marginBottom="50dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="There is No Product in Your Cart ! \n Press Back And Add Some Product "
+       android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:id="@+id/emptymsg"
+        android:visibility="gone"
+        android:layout_marginTop="7dp"
+        android:textSize="14dp"
+        ></TextView>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="40dp"

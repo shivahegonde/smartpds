@@ -171,6 +171,9 @@ public class DistributerShop extends AppCompatActivity {
         proceedtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 documentReference = db.getReference("Cart/"+ customerMobile);
                 Cart cart= new Cart(ShopId , true );
                 documentReference.child("status").setValue(cart);
@@ -199,7 +202,7 @@ public class DistributerShop extends AppCompatActivity {
 
             @Override
             public void addQuantityClick(Product product, String productName, TextView v) {
-quantityReference.child(productName).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
+            quantityReference.child(productName).child("quantity").addListenerForSingleValueEvent(new ValueEventListener() {
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         String productQuantityRemaining=dataSnapshot.getValue(String.class);
