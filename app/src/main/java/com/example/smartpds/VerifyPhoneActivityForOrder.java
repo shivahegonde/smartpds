@@ -23,6 +23,9 @@ import com.example.smartpds.model.Review;
 import com.example.smartpds.shop.OnCustomerInfo;
 import com.example.smartpds.shop.OnGetInfoListner;
 import com.example.smartpds.shop.OnGetStatusListner;
+import com.example.smartpds.utils.ApiClient;
+import com.example.smartpds.utils.ApiInterface;
+import com.example.smartpds.utils.MessageResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -47,12 +50,17 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 
 
     private String verificationId;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    String API_KEY,sessionId;
     private EditText editText;
     private Button signIn;
     TextView otpText;
@@ -74,6 +82,8 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_verification);
         userType = getIntent().getStringExtra("usertype");
+        sessionId = getIntent().getStringExtra("sessionid");
+        API_KEY = getIntent().getStringExtra("apikey");
         key = getIntent().getStringExtra("key");
         distributerOrderId = getIntent().getStringExtra("Distributerkey");
         mAuth = FirebaseAuth.getInstance();
@@ -113,6 +123,64 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
                     editText.requestFocus();
                     return;
                 }
+
+
+                //new otp
+
+                ApiInterface apiService =
+                        ApiClient.getClient().create(ApiInterface.class);
+
+                Call<MessageResponse> call = apiService.verifyOTP(API_KEY,sessionId, code);
+
+                call.enqueue(new Callback<MessageResponse>() {
+
+                    @Override
+                    public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+
+                        try {
+                            if(response.body().getStatus().equals("Success")){
+                                placeOrder(code);
+                                Intent i=new Intent(VerifyPhoneActivityForOrder.this,DashBoard.class);
+                                startActivity(i);
+                            }else{
+                                Toast.makeText(VerifyPhoneActivityForOrder.this, "Not matched", Toast.LENGTH_SHORT).show();
+                                Log.d("Failure", response.body().getDetails()+"|||"+response.body().getStatus());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageResponse> call, Throwable t) {
+                        Log.e("ERROR", t.toString());
+                    }
+
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //                verifyCode(code);
 
 //                checkQuantityAndPrice(new OnGetStatusListner() {
@@ -122,7 +190,7 @@ public class VerifyPhoneActivityForOrder extends AppCompatActivity {
 //                        if (status) {
 
 
-                            placeOrder(code);
+
 //
 //
 //                        }

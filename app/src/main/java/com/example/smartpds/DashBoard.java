@@ -480,7 +480,7 @@ public class DashBoard extends AppCompatActivity implements BaseSliderView.OnSli
         TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
         TextView text1 = (TextView) dialog.findViewById(R.id.text1);
         text.setTextSize(25);
-        text.setText("Account Staus Pendind");
+        text.setText("Account Status Pending");
         text1.setText("You are not approved consumer.");
 
         Button dialogButton1 = (Button) dialog.findViewById(R.id.btn1);

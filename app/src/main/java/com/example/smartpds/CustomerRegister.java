@@ -37,6 +37,7 @@ import com.google.firebase.storage.UploadTask;
 import com.google.zxing.WriterException;
 
 import java.io.File;
+import java.security.acl.LastOwnerException;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -81,19 +82,31 @@ String name;
 
     }
     public void insert(View view){
-        customer.setFname(firstName.getText().toString().trim());
-        customer.setLname(lastName.getText().toString().trim());
-        customer.setMobile(Long.parseLong(mobileNo.getText().toString().trim()));
-        customer.setEmail(emailId.getText().toString().trim());
+        String customerFirstName=firstName.getText().toString().trim();
+        String customerLastName=lastName.getText().toString().trim();
+        String mobile=mobileNo.getText().toString().trim();
+        String email=emailId.getText().toString().trim();
+        String address=customerAddress.getText().toString().trim();
+        String city=customerCity.getText().toString().trim();
+        String state=customerState.getText().toString().trim();
+        String pincode=customerPincode.getText().toString().trim();
+
+
+
+
+
+        customer.setFname(customerFirstName);
+        customer.setLname(customerLastName);
+        customer.setMobile(Long.parseLong(mobile));
+        customer.setEmail(email);
         name=firstName.getText().toString().trim()+lastName.getText().toString().trim();
-        final String mobile=mobileNo.getText().toString().trim();
-        customer.setAddress(customerAddress.getText().toString().trim());
-        customer.setCity(customerCity.getText().toString().trim());
+        customer.setAddress(address);
+        customer.setCity(city);
         customer.setKycDone("no");
         customer.setWalletAmmount(0);
         customer.setAccountStatus("pending");
-        customer.setState(customerState.getText().toString().trim());
-        customer.setPincode(Integer.parseInt(customerPincode.getText().toString().trim()));
+        customer.setState(state);
+        customer.setPincode(Integer.parseInt(pincode));
 
 //        databaseReference.addValueEventListener(new ValueEventListener() {
 //            @Override

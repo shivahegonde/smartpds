@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -133,8 +134,8 @@ public class CartActivity extends AppCompatActivity {
                 Date date = new Date();
                 //otp
 
-//concomment for otp
-                /*ApiInterface apiService =
+
+                ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
 
                 Call<MessageResponse> call = apiService.sentOTP(API_KEY, userId);
@@ -143,6 +144,7 @@ public class CartActivity extends AppCompatActivity {
                     public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                         sessionId = response.body().getDetails();
                         Log.d("SenderID", sessionId);
+                        Toast.makeText(CartActivity.this, "Otp sent"+sessionId, Toast.LENGTH_SHORT).show();
                         //you may add code to automatically fetch OTP from messages.
                     }
 
@@ -151,7 +153,7 @@ public class CartActivity extends AppCompatActivity {
                         Log.e("ERROR", t.toString());
                     }
 
-                });*/
+                });
 
 
 

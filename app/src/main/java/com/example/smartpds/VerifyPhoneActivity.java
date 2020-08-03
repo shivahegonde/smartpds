@@ -69,7 +69,6 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     return;
                 }
                 verifyCode(code);
-
             }
         });
 
@@ -78,7 +77,6 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
-
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
@@ -86,7 +84,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) { //change remove ! for authentication
+                        if (task.isSuccessful()) {
                             if (userType.equalsIgnoreCase("distributor")){
                                 Toast.makeText(getApplicationContext() , "Distributer" ,Toast.LENGTH_LONG).show();
 
@@ -155,7 +153,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(VerifyPhoneActivity.this, "", Toast.LENGTH_LONG).show();
+                            Toast.makeText(VerifyPhoneActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
